@@ -39,13 +39,13 @@ public class Commodity extends Model<Commodity> {
 
     private String classification;
 
-    private Integer inventory;
+    private Double inventory;
 
     private String unit;
 
-    private Integer purchasePrice;
+    private Double purchasePrice;
 
-    private Integer price;
+    private Double price;
 
     private Boolean isDiscount;
 
@@ -54,6 +54,10 @@ public class Commodity extends Model<Commodity> {
     private LocalDateTime produceDate;
 
     private Integer expirationTime;
+
+    private String parent;
+
+    private String brother;
 
     private LocalDateTime createTime;
 

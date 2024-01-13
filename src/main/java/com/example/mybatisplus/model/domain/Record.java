@@ -33,7 +33,7 @@ public class Record extends Model<Record> {
 
     private Integer comId;
 
-    private Integer number;
+    private Double number;
 
     private Boolean isDeleted;
 

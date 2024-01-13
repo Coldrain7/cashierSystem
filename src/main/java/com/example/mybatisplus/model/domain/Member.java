@@ -33,7 +33,7 @@ public class Member extends Model<Member> {
 
     private Long phone;
 
-    private Integer point;
+    private Double point;
 
     private Boolean isDeleted;
 

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -32,12 +33,20 @@ public class MailService {
     @Autowired
     private Mapper mapper;
 
-    public void sendSimpleMailMessage(MailDTO mailDTO) {
+    public boolean sendSimpleMailMessage(MailDTO mailDTO) {
         SimpleMailMessage simpleMailMessage = mapper.map(mailDTO, SimpleMailMessage.class);
         if (StringUtils.isEmpty(mailDTO.getFrom())) {
             mailDTO.setFrom(mailProperties.getFrom());
         }
-        javaMailSender.send(simpleMailMessage);
+        try {
+            javaMailSender.send(simpleMailMessage);
+            // System.out.println("发送成功");
+            return true;
+        } catch (MailException ex) {
+            System.err.println("Failed to send email: " + ex.getMessage());
+            return false;
+            // 在这里，您可以根据需要进一步处理异常，例如记录日志或通知用户。
+        }
     }
 
     public void sendMimeMessage(MailDTO mailDTO) {

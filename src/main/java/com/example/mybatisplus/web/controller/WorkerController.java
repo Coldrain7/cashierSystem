@@ -144,11 +144,11 @@ public class WorkerController {
         mailDTO.setText(text);
         mailDTO.setSubject("验证码");
         mailDTO.setFrom("2057787038@qq.com");
-        mailService.sendSimpleMailMessage(mailDTO);
+        boolean result = mailService.sendSimpleMailMessage(mailDTO);
         //System.out.println(System.currentTimeMillis());
         SessionUtils.saveSendTime(System.currentTimeMillis());
         SessionUtils.saveCode(code);
-        return JsonResponse.success("已发送");
+        return JsonResponse.success(result);
     }
     @ResponseBody
     @GetMapping("/checkCode")

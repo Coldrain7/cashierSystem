@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisplus.mapper.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Admin">
+        <id column="id" property="id" />
+        <result column="loginName" property="loginName" />
+        <result column="password" property="password" />
+        <result column="lastLoginTime" property="lastLoginTime" />
+        <result column="remark" property="remark" />
+        <result column="role_type" property="roleType"></result>
+    </resultMap>
+    <select id="mySelectById" resultType="com.example.mybatisplus.model.domain.Admin">
+        select * from admin where id = #{id}
+    </select>
+    <select id="mySelectByAdmin" resultType="com.example.mybatisplus.model.domain.Admin">
+        select * from admin where id = #{admin.id}
+    </select>
+    <select id="list" resultType="com.example.mybatisplus.model.domain.Admin">
+        select * from admin
+    </select>
+    <select id="pageList" resultType="com.example.mybatisplus.model.domain.Admin">
+        select * from admin
+    </select>
+    <!--每一个接口对应一个标签，增删查改 方法名为标签的id名，参数类型不用管，-->
+
+    <!--查询的结果不管是单个对象还是对象集合，resultType都是这个对象的全类名-->
+
+
+</mapper>

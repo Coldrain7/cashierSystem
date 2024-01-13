@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisplus.mapper.BookMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Book">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="price" property="price" />
+        <result column="author" property="author" />
+        <result column="creatorId" property="creatorId" />
+        <result column="remark" property="remark" />
+    </resultMap>
+    <resultMap id="BaseResultMapWithAdmin" type="com.example.mybatisplus.model.domain.Book" extends="BaseResultMap">
+        <association property="admin" javaType="com.example.mybatisplus.model.domain.Admin">
+            <id column="id" property="id" />
+            <result column="loginName" property="loginName" />
+            <result column="password" property="password" />
+            <result column="lastLoginTime" property="lastLoginTime" />
+            <result column="remark" property="remark" />
+        </association>
+    </resultMap>
+    <select id="pageList" resultType="com.example.mybatisplus.model.domain.Book">
+        select * from book
+        <where>
+            <if test = "book.name != null and book.name != ''">
+                and name = #{book.name}
+            </if>
+            <if test = "book.author != null and book.author != ''">
+                and author = #{book.author}
+            </if>
+            <if test = "book.price != null and book.price != ''">
+                and price = #{book.price}
+            </if>
+        </where>
+    </select>
+    <select id="selectByIdWithAdmin" resultMap="BaseResultMapWithAdmin">
+        select * from book as b , admin as a where b.creatorId = a.id and b.id = #{id}
+    </select>
+
+
+
+
+
+</mapper>

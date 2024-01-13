@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisplus.mapper.CommodityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Commodity">
+        <id column="id" property="id" />
+        <result column="wor_id" property="worId" />
+        <result column="sup_id" property="supId" />
+        <result column="name" property="name" />
+        <result column="barcode" property="barcode" />
+        <result column="classification" property="classification" />
+        <result column="inventory" property="inventory" />
+        <result column="unit" property="unit" />
+        <result column="purchase_price" property="purchasePrice" />
+        <result column="price" property="price" />
+        <result column="is_discount" property="isDiscount" />
+        <result column="supplier" property="supplier" />
+        <result column="produce_date" property="produceDate" />
+        <result column="expiration_time" property="expirationTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+</mapper>

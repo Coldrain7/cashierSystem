@@ -43,7 +43,7 @@ public class WorkerController {
     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getById(@PathVariable("id") Long id)throws Exception {
+    public JsonResponse getById(@PathVariable("id") Integer id)throws Exception {
         Worker  worker =  workerService.getById(id);
         return JsonResponse.success(worker);
     }
@@ -168,6 +168,19 @@ public class WorkerController {
             }
         }
         return JsonResponse.success("验证码超时");
+    }
+
+    /**
+     * 根据id修改密码，且只修改密码
+     * @param worker
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/changePassword")
+    public JsonResponse changePassword(@RequestBody Worker worker){
+        Worker w = new Worker().setId(worker.getId()).setPassword(worker.getPassword());
+        boolean result = workerService.updateById(w);
+        return JsonResponse.success(result);
     }
 }
 

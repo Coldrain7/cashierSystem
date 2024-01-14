@@ -19,7 +19,6 @@
         <result column="produce_date" property="produceDate" />
         <result column="expiration_time" property="expirationTime" />
         <result column="parent" property="parent" />
-        <result column="brother" property="brother" />
         <result column="update_time" property="updateTime" />
         <result column="is_deleted" property="isDeleted" />
     </resultMap>

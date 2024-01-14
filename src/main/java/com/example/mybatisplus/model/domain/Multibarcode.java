@@ -1,7 +1,9 @@
 package com.example.mybatisplus.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -12,56 +14,32 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 商品相关属性
+ * 一品多码关系表
  * </p>
  *
  * @author harry
- * @since 2024-01-06
+ * @since 2024-01-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Commodity对象", description="商品相关属性")
-public class Commodity extends Model<Commodity> {
+@ApiModel(value="Multibarcode对象", description="一品多码关系表")
+public class Multibarcode extends Model<Multibarcode> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer worId;
-
-    private Integer supId;
-
-    private String name;
+    private Integer comId;
 
     private String barcode;
 
-    private String classification;
-
-    private Double inventory;
-
-    private String unit;
-
-    private Double purchasePrice;
-
-    private Double price;
-
-    private Boolean isDiscount;
-
-    private String supplier;
-
-    private LocalDateTime produceDate;
-
-    private Integer expirationTime;
-
-    private String parent;
+    private Boolean isDeleted;
 
     private LocalDateTime createTime;
 
-    private LocalDateTime updateTime;
-
-    private LocalDateTime isDeleted;
+    private LocalDateTime updateData;
 
 
     @Override

@@ -5,11 +5,10 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Commodity">
         <id column="id" property="id" />
-        <result column="wor_id" property="worId" />
         <result column="sup_id" property="supId" />
         <result column="name" property="name" />
         <result column="barcode" property="barcode" />
-        <result column="classification" property="classification" />
+        <result column="cla_id" property="claId" />
         <result column="inventory" property="inventory" />
         <result column="unit" property="unit" />
         <result column="purchase_price" property="purchasePrice" />
@@ -18,9 +17,56 @@
         <result column="supplier" property="supplier" />
         <result column="produce_date" property="produceDate" />
         <result column="expiration_time" property="expirationTime" />
+        <result column="specification" property="specification" />
         <result column="parent" property="parent" />
+        <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="is_deleted" property="isDeleted" />
     </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ClassificationMap" type="com.example.mybatisplus.model.domain.Classification">
+        <id column="id" property="id" />
+        <result column="sup_id" property="supId" />
+        <result column="cla_id" property="claId" />
+        <result column="classification" property="classification" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="CommodityWithClassification" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
+        <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
+    </resultMap>
+    <select id="selectPageWithClassification" resultMap="CommodityWithClassification">
+        select commodity.name,commodity.barcode,commodity.inventory,
+               commodity.unit,commodity.purchase_price,commodity.price,commodity.specification,
+               commodity.is_discount,commodity.supplier,
+               commodity.produce_date,commodity.expiration_time,classification.classification,
+               commodity.create_time
+        from commodity, classification
+        <where>
+            classification.id = commodity.cla_id
+            <if test="commodity.name != null and commodity.name != ''">
+                and commodity.name like '%${commodity.name}%'
+            </if>
+            <if test="commodity.barcode != null and commodity.barcode != ''">
+                and commodity.barcode = #{commodity.barcode}
+            </if>
+
+            <if test="commodity.supplier != null and commodity.supplier !=''">
+                and commodity.supplier = #{commodity.supplier}
+            </if>
+            <if test="commodity.isDiscount != null ">
+                and commodity.is_discount = #{commodity.isDiscount}
+            </if>
+            <if test="commodity.specification != null and commodity.specification != ''">
+                and commodity.specification = #{commodity.specification}
+            </if>
+            <if test="commodity.classification != null ">
+            <if test="commodity.classification.classification != null and commodity.classification.classification != ''">
+                and classification.classification = #{commodity.classification.classification}
+            </if>
+            </if>
+        </where>
+    </select>
 
 </mapper>

@@ -1,5 +1,7 @@
 package com.example.mybatisplus.model.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDateTime;
@@ -26,10 +28,8 @@ public class Commodity extends Model<Commodity> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
-    private Integer id;
-
-    private Integer worId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private Integer supId;
 
@@ -37,7 +37,7 @@ public class Commodity extends Model<Commodity> {
 
     private String barcode;
 
-    private String classification;
+    private String claId;
 
     private Double inventory;
 
@@ -47,6 +47,8 @@ public class Commodity extends Model<Commodity> {
 
     private Double price;
 
+    private String specification;
+
     private Boolean isDiscount;
 
     private String supplier;
@@ -55,13 +57,15 @@ public class Commodity extends Model<Commodity> {
 
     private Integer expirationTime;
 
-    private String parent;
+    private Long parent;
 
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
 
-    private LocalDateTime isDeleted;
+    private Boolean isDeleted;
+    @TableField(exist = false)
+    private Classification classification;
 
 
     @Override

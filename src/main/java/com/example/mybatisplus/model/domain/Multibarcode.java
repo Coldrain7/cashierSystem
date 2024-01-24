@@ -31,7 +31,7 @@ public class Multibarcode extends Model<Multibarcode> {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer comId;
+    private Long comId;
 
     private String barcode;
 

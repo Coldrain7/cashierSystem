@@ -5,9 +5,12 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Record">
         <id column="id" property="id" />
+        <id column="com_id" property="comId" />
+        <result column="worker_id" property="workerId" />
         <result column="mem_id" property="memId" />
-        <result column="com_id" property="comId" />
         <result column="number" property="number" />
+        <result column="payment" property="payment" />
+        <result column="method" property="method" />
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

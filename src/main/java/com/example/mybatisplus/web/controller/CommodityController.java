@@ -1,5 +1,8 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.model.domain.Book;
+import com.example.mybatisplus.model.dto.PageDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -74,5 +77,20 @@ public class CommodityController {
         commodityService.save(commodity);
         return JsonResponse.success(null);
     }
+
+    /**
+     * 接口还有缺陷，需要再建一个单位表，联合单位表、分类表和商品表查询结果
+     * @param pageDTO
+     * @param commodity
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/commodityPage")
+    public JsonResponse commodityPage(PageDTO pageDTO, Commodity commodity)
+    {
+        Page<Commodity> page = commodityService.commodityPage(pageDTO, commodity);
+        return JsonResponse.success(page);
+    }
+
 }
 

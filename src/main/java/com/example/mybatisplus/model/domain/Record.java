@@ -27,13 +27,19 @@ public class Record extends Model<Record> {
     private static final long serialVersionUID = 1L;
 
     @TableId("id")
-    private Integer id;
+    private Long id;
 
     private Integer memId;
 
     private Integer comId;
 
+    private Integer workerId;
+
     private Double number;
+
+    private Double payment;
+
+    private Integer method;
 
     private Boolean isDeleted;
 

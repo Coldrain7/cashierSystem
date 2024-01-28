@@ -18,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommodityMapper extends BaseMapper<Commodity> {
 
-    Page<Commodity> selectPageWithClassification(Page page, @Param("commodity")Commodity commodity);
+    Page<Commodity> selectCommodityPage(Page page, @Param("commodity")Commodity commodity);
 }

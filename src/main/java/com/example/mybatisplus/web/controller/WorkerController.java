@@ -182,5 +182,18 @@ public class WorkerController {
         boolean result = workerService.updateById(w);
         return JsonResponse.success(result);
     }
+
+    /**
+     * 根据用户id获取超市id
+     * @param worker
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getSupId")
+    public JsonResponse getSupIdById(Worker worker){
+        Worker w = workerService.getById(worker.getId());
+        return JsonResponse.success(w.getSupId());
+    }
+
 }
 

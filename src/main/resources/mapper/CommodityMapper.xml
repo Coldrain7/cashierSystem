@@ -10,11 +10,12 @@
         <result column="barcode" property="barcode" />
         <result column="cla_id" property="claId" />
         <result column="inventory" property="inventory" />
-        <result column="unit" property="unit" />
+        <result column="unit_id" property="unitId" />
         <result column="purchase_price" property="purchasePrice" />
         <result column="price" property="price" />
+        <result column="wholesale_price" property="wholesalePrice"/>
         <result column="is_discount" property="isDiscount" />
-        <result column="supplier" property="supplier" />
+        <result column="supplier_id" property="supplierId" />
         <result column="produce_date" property="produceDate" />
         <result column="expiration_time" property="expirationTime" />
         <result column="specification" property="specification" />
@@ -33,27 +34,46 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
-    <resultMap id="CommodityWithClassification" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
-        <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
+    <resultMap id="UnitMap" type="com.example.mybatisplus.model.domain.Unit">
+        <id column="id" property="id" />
+        <result column="sup_id" property="supId" />
+        <result column="unit" property="unit" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
-    <select id="selectPageWithClassification" resultMap="CommodityWithClassification">
+    <resultMap id="SupplierMap" type="com.example.mybatisplus.model.domain.Supplier">
+        <id column="id" property="id" />
+        <result column="sup_id" property="supId" />
+        <result column="supplier_name" property="name" />
+        <result column="number" property="number" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="CommodityPage" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
+        <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
+        <association property="unit"  javaType="com.example.mybatisplus.model.domain.Unit" resultMap="UnitMap"></association>
+        <association property="supplier"  javaType="com.example.mybatisplus.model.domain.Supplier" resultMap="SupplierMap"></association>
+    </resultMap>
+    <select id="selectCommodityPage" resultMap="CommodityPage">
         select commodity.name,commodity.barcode,commodity.inventory,
-               commodity.unit,commodity.purchase_price,commodity.price,commodity.specification,
-               commodity.is_discount,commodity.supplier,
+               commodity.purchase_price,commodity.price,commodity.specification,
+               commodity.is_discount,commodity.wholesale_price,
                commodity.produce_date,commodity.expiration_time,classification.classification,
-               commodity.create_time
-        from commodity, classification
+               commodity.create_time,unit.unit,
+               supplier.name as supplier_name, supplier.number
+        from classification, unit,commodity left outer join supplier on commodity.supplier_id = supplier.id
         <where>
-            classification.id = commodity.cla_id
+            classification.id = commodity.cla_id and commodity.unit_id = unit.id and commodity.sup_id = #{commodity.supId}
             <if test="commodity.name != null and commodity.name != ''">
                 and commodity.name like '%${commodity.name}%'
             </if>
             <if test="commodity.barcode != null and commodity.barcode != ''">
-                and commodity.barcode = #{commodity.barcode}
+                and commodity.barcode like '%${commodity.barcode}%'
             </if>
-
-            <if test="commodity.supplier != null and commodity.supplier !=''">
-                and commodity.supplier = #{commodity.supplier}
+            <if test="commodity.supplierId != null and commodity.supplierId> 0">
+                and commodity.supplier_id = #{commodity.supplierId}
             </if>
             <if test="commodity.isDiscount != null ">
                 and commodity.is_discount = #{commodity.isDiscount}
@@ -61,10 +81,9 @@
             <if test="commodity.specification != null and commodity.specification != ''">
                 and commodity.specification = #{commodity.specification}
             </if>
-            <if test="commodity.classification != null ">
-            <if test="commodity.classification.classification != null and commodity.classification.classification != ''">
-                and classification.classification = #{commodity.classification.classification}
-            </if>
+            <!-- claId == 0 表示全部分类-->
+            <if test="commodity.claId > 0">
+                and commodity.cla_id = #{commodity.claId}
             </if>
         </where>
     </select>

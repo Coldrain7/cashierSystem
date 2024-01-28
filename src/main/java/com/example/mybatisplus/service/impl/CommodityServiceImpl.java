@@ -28,7 +28,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public Page<Commodity> commodityPage(PageDTO pageDTO, Commodity commodity) {
         Page<Commodity> page = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
-        commodityMapper.selectPageWithClassification(page, commodity);
+        commodityMapper.selectCommodityPage(page, commodity);
         return page;
     }
 }

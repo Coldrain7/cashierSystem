@@ -41,17 +41,19 @@ public class Commodity extends Model<Commodity> {
 
     private Double inventory;
 
-    private String unit;
+    private Integer unitId;
 
     private Double purchasePrice;
 
     private Double price;
 
+    private Double wholesalePrice;
+
     private String specification;
 
     private Boolean isDiscount;
 
-    private String supplier;
+    private Integer supplierId;
 
     private LocalDateTime produceDate;
 
@@ -66,6 +68,10 @@ public class Commodity extends Model<Commodity> {
     private Boolean isDeleted;
     @TableField(exist = false)
     private Classification classification;
+    @TableField(exist = false)
+    private Unit unit;
+    @TableField(exist = false)
+    private Supplier supplier;
 
 
     @Override

@@ -6,11 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class Commodity extends Model<Commodity> {
 
     private String barcode;
 
-    private String claId;
+    private Integer claId;
 
     private Double inventory;
 
@@ -54,7 +55,7 @@ public class Commodity extends Model<Commodity> {
     private Boolean isDiscount;
 
     private Integer supplierId;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime produceDate;
 
     private Integer expirationTime;

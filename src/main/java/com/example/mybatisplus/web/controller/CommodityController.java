@@ -53,20 +53,6 @@ public class CommodityController {
         commodityService.removeById(id);
         return JsonResponse.success(null);
     }
-
-
-    /**
-    * 描述：根据Id 更新
-    *
-    */
-    @RequestMapping(value = "", method = RequestMethod.PUT)
-    @ResponseBody
-    public JsonResponse updateCommodity(Commodity  commodity) throws Exception {
-        commodityService.updateById(commodity);
-        return JsonResponse.success(null);
-    }
-
-
     /**
     * 描述:创建Commodity
     *
@@ -92,5 +78,16 @@ public class CommodityController {
         return JsonResponse.success(page);
     }
 
+    /**
+     * 根据id更新商品
+     * @param commodity 商品实体，包含要修改的属性值
+     * @return boolean
+     */
+    @ResponseBody
+    @GetMapping("/updateCommodity")
+    public JsonResponse updateCommodity(Commodity commodity){
+        boolean result = commodityService.updateById(commodity);
+        return JsonResponse.success(result);
+    }
 }
 

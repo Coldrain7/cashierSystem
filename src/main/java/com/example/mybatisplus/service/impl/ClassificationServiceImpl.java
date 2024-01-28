@@ -1,10 +1,14 @@
 package com.example.mybatisplus.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mybatisplus.model.domain.Classification;
 import com.example.mybatisplus.mapper.ClassificationMapper;
 import com.example.mybatisplus.service.ClassificationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper, Classification> implements ClassificationService {
 
+    @Autowired
+    private ClassificationMapper classificationMapper;
+    @Override
+    public List<Classification> getSupClassifications(Integer supId) {
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        if(supId != null){
+            wrapper.eq("sup_id", supId);
+            return classificationMapper.selectList(wrapper);
+        }else{
+            return null;
+        }
+    }
 }

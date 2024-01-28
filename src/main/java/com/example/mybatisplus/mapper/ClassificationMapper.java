@@ -2,6 +2,7 @@ package com.example.mybatisplus.mapper;
 
 import com.example.mybatisplus.model.domain.Classification;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author harry
  * @since 2024-01-19
  */
+@Repository
 public interface ClassificationMapper extends BaseMapper<Classification> {
 
 }

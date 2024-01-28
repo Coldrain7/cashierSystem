@@ -1,5 +1,7 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.service.ClassificationService;
 import com.example.mybatisplus.model.domain.Classification;
+
+import java.util.List;
 
 
 /**
@@ -73,6 +77,13 @@ public class ClassificationController {
     public JsonResponse create(Classification  classification) throws Exception {
         classificationService.save(classification);
         return JsonResponse.success(null);
+    }
+
+    @ResponseBody
+    @GetMapping("/getOptions")
+    public JsonResponse getOptions(Integer supId){
+        List<Classification> classifications = classificationService.getSupClassifications(supId);
+        return JsonResponse.success(classifications);
     }
 }
 

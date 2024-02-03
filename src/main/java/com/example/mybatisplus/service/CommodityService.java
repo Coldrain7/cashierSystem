@@ -17,4 +17,5 @@ public interface CommodityService extends IService<Commodity> {
 
     Page<Commodity> commodityPage(PageDTO pageDTO, Commodity commodity);
 
+    long insert(Commodity commodity);
 }

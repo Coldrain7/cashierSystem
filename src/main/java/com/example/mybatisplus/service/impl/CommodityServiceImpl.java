@@ -31,4 +31,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         commodityMapper.selectCommodityPage(page, commodity);
         return page;
     }
+
+    @Override
+    public long insert(Commodity commodity) {
+        commodityMapper.insert(commodity);
+        return commodity.getId();
+    }
 }

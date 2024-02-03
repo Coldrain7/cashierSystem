@@ -1,5 +1,6 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Book;
 import com.example.mybatisplus.model.dto.PageDTO;
@@ -33,10 +34,12 @@ public class CommodityController {
     private CommodityService commodityService;
 
     /**
-    * 描述：根据Id 查询
-    *
-    */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+     * 描述：根据Id 查询
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/getCommodity/{id}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse getById(@PathVariable("id") Long id)throws Exception {
         Commodity  commodity =  commodityService.getById(id);
@@ -44,28 +47,38 @@ public class CommodityController {
     }
 
     /**
-    * 描述：根据Id删除
-    *
-    */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+     * 描述：根据Id删除
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/deleteCommodity/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        commodityService.removeById(id);
-        return JsonResponse.success(null);
-    }
-    /**
-    * 描述:创建Commodity
-    *
-    */
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse create(Commodity  commodity) throws Exception {
-        commodityService.save(commodity);
-        return JsonResponse.success(null);
+        boolean result = commodityService.removeById(id);
+        return JsonResponse.success(result);
     }
 
     /**
-     * 接口还有缺陷，需要再建一个单位表，联合单位表、分类表和商品表查询结果
+     * 创建新商品
+     * @param commodity 新商品实体
+     * @return boolean
+     */
+    @ResponseBody
+    @GetMapping("/createCommodity")
+    public JsonResponse createCommodity(Commodity  commodity){
+        QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
+        wrapper.eq("barcode", commodity.getBarcode()).eq("sup_id", commodity.getSupId());
+        Commodity c = commodityService.getOne(wrapper);
+        if(c == null){
+            long id = commodityService.insert(commodity);
+            return JsonResponse.success(id);
+        }
+        return JsonResponse.success(null, "商品已存在");
+    }
+
+    /**
+     * 基本的查询商品功能，还差一品多码表没有联合
      * @param pageDTO
      * @param commodity
      * @return

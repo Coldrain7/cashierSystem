@@ -67,6 +67,7 @@
         from classification, unit,commodity left outer join supplier on commodity.supplier_id = supplier.id
         <where>
             classification.id = commodity.cla_id and commodity.unit_id = unit.id and commodity.sup_id = #{commodity.supId}
+            and commodity.is_deleted = 0
             <if test="commodity.name != null and commodity.name != ''">
                 and commodity.name like '%${commodity.name}%'
             </if>

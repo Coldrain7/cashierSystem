@@ -2,6 +2,7 @@ package com.example.mybatisplus.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public class Supplier extends Model<Supplier> {
 
     private Integer number;
 
+    @TableLogic
     private Boolean isDeleted;
 
     private LocalDateTime createTime;

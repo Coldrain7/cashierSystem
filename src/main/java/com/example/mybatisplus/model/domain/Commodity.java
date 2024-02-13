@@ -49,6 +49,8 @@ public class Commodity extends Model<Commodity> {
 
     private Double price;
 
+    private Boolean isMultibarcode;
+
     private Double wholesalePrice;
 
     private String specification;
@@ -75,6 +77,8 @@ public class Commodity extends Model<Commodity> {
     private Unit unit;
     @TableField(exist = false)
     private Supplier supplier;
+    @TableField(exist = false)
+    private Multibarcode multibarcode;
 
 
     @Override

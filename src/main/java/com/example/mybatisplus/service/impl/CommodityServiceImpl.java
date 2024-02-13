@@ -37,4 +37,9 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         commodityMapper.insert(commodity);
         return commodity.getId();
     }
+
+    @Override
+    public Commodity getUniqueBarcode(Commodity commodity) {
+        return commodityMapper.getUniqueBarcode(commodity);
+    }
 }

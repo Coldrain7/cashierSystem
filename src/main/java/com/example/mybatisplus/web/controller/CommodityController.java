@@ -67,14 +67,15 @@ public class CommodityController {
     @ResponseBody
     @GetMapping("/createCommodity")
     public JsonResponse createCommodity(Commodity  commodity){
-        QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
-        wrapper.eq("barcode", commodity.getBarcode()).eq("sup_id", commodity.getSupId());
-        Commodity c = commodityService.getOne(wrapper);
+        // QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
+        // wrapper.eq("barcode", commodity.getBarcode()).eq("sup_id", commodity.getSupId());
+        // Commodity c = commodityService.getOne(wrapper);
+        Commodity c = commodityService.getUniqueBarcode(commodity);
         if(c == null){
             long id = commodityService.insert(commodity);
             return JsonResponse.success(id);
         }
-        return JsonResponse.success(null, "商品已存在");
+        return JsonResponse.success(null, "商品条码已存在");
     }
 
     /**
@@ -90,7 +91,6 @@ public class CommodityController {
         Page<Commodity> page = commodityService.commodityPage(pageDTO, commodity);
         return JsonResponse.success(page);
     }
-
     /**
      * 根据id更新商品
      * @param commodity 商品实体，包含要修改的属性值

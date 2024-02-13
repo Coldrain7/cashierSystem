@@ -9,7 +9,7 @@
         <result column="barcode" property="barcode" />
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
-        <result column="update_data" property="updateData" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
 </mapper>

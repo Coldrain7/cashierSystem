@@ -19,4 +19,6 @@ import org.springframework.stereotype.Repository;
 public interface CommodityMapper extends BaseMapper<Commodity> {
 
     Page<Commodity> selectCommodityPage(Page page, @Param("commodity")Commodity commodity);
+
+    Commodity getUniqueBarcode(@Param("commodity") Commodity commodity);
 }

@@ -15,6 +15,7 @@
         <result column="price" property="price" />
         <result column="wholesale_price" property="wholesalePrice"/>
         <result column="is_discount" property="isDiscount" />
+        <result column="is_multibarcode" property="isMultibarcode" />
         <result column="supplier_id" property="supplierId" />
         <result column="produce_date" property="produceDate" />
         <result column="expiration_time" property="expirationTime" />
@@ -51,16 +52,27 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="MultiBarcodeMap" type="com.example.mybatisplus.model.domain.Multibarcode">
+        <id column="id" property="id" />
+        <result column="com_id" property="comId" />
+        <result column="m_barcode" property="barcode" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
     <resultMap id="CommodityPage" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
         <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
         <association property="unit"  javaType="com.example.mybatisplus.model.domain.Unit" resultMap="UnitMap"></association>
         <association property="supplier"  javaType="com.example.mybatisplus.model.domain.Supplier" resultMap="SupplierMap"></association>
     </resultMap>
+    <resultMap id="UniqueBarcoe" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
+        <association property="multibarcode"  javaType="com.example.mybatisplus.model.domain.Multibarcode" resultMap="MultiBarcodeMap"></association>
+    </resultMap>
     <select id="selectCommodityPage" resultMap="CommodityPage">
         select commodity.id,commodity.name,commodity.barcode,commodity.inventory,commodity.purchase_price,
                commodity.price,commodity.specification,commodity.is_discount,commodity.wholesale_price,
                commodity.produce_date,commodity.expiration_time,commodity.cla_id, commodity.unit_id,
-               commodity.supplier_id,commodity.sup_id,
+               commodity.supplier_id,commodity.sup_id,commodity.is_multibarcode,
                classification.classification,
                commodity.create_time,unit.unit,
                supplier.name as supplier_name, supplier.number
@@ -88,6 +100,12 @@
                 and commodity.cla_id = #{commodity.claId}
             </if>
         </where>
+    </select>
+    <select id="getUniqueBarcode" resultType="com.example.mybatisplus.model.domain.Commodity">
+        select commodity.barcode, multibarcode.barcode as m_barcode
+        from commodity left outer join multibarcode on commodity.id = multibarcode.com_id
+        where (commodity.barcode = #{commodity.barcode} or multibarcode.barcode = #{commodity.barcode})
+          and commodity.is_deleted = 0 and multibarcode.is_deleted = 0
     </select>
 
 </mapper>

@@ -41,7 +41,7 @@ public class Multibarcode extends Model<Multibarcode> {
 
     private LocalDateTime createTime;
 
-    private LocalDateTime updateData;
+    private LocalDateTime updateTime;
 
 
     @Override

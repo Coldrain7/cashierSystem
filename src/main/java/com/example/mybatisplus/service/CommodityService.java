@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.PageDTO;
+import com.example.mybatisplus.model.dto.SortDTO;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import com.example.mybatisplus.model.dto.PageDTO;
 public interface CommodityService extends IService<Commodity> {
 
     Page<Commodity> commodityPage(PageDTO pageDTO, Commodity commodity);
+    Page<Commodity> commodityPageInOrder(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO);
 
     long insert(Commodity commodity);
 
@@ -25,4 +27,6 @@ public interface CommodityService extends IService<Commodity> {
      * @return 条形码已存在就返回commodity类
      */
     Commodity getUniqueBarcode(Commodity commodity);
+
+    Page<Commodity> searchCommodities(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO);
 }

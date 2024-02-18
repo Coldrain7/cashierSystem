@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -78,7 +79,7 @@ public class Commodity extends Model<Commodity> {
     @TableField(exist = false)
     private Supplier supplier;
     @TableField(exist = false)
-    private Multibarcode multibarcode;
+    private List<Multibarcode> multibarcodes;
 
 
     @Override

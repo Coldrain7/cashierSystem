@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mybatisplus.model.dto.PageDTO;
+import com.example.mybatisplus.model.dto.SortDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,17 @@ import org.springframework.stereotype.Repository;
 public interface CommodityMapper extends BaseMapper<Commodity> {
 
     Page<Commodity> selectCommodityPage(Page page, @Param("commodity")Commodity commodity);
+
+    Page<Commodity> selectCommodityInOrder(Page page, @Param("commodity")Commodity commodity, @Param("sortDTO") SortDTO sortDTO);
+
+    /**
+     * 根据传入Commodity对象的name和barcode字段查询，根据sortDTO中的字段排序
+     * @param page 分页器
+     * @param commodity 需要包含name和barcode字段，不能为空
+     * @param sortDTO order字段为asc或desc时才能排序
+     * @return Page<Commodity>
+     */
+    Page<Commodity> searchCommodityPage(Page page, @Param("commodity") Commodity commodity, @Param("sortDTO")SortDTO sortDTO);
 
     Commodity getUniqueBarcode(@Param("commodity") Commodity commodity);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Book;
 import com.example.mybatisplus.model.dto.PageDTO;
+import com.example.mybatisplus.model.dto.SortDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public class CommodityController {
     }
 
     /**
-     * 基本的查询商品功能，还差一品多码表没有联合
+     * 基本的查询商品功能
      * @param pageDTO
      * @param commodity
      * @return
@@ -89,6 +90,12 @@ public class CommodityController {
     public JsonResponse commodityPage(PageDTO pageDTO, Commodity commodity)
     {
         Page<Commodity> page = commodityService.commodityPage(pageDTO, commodity);
+        return JsonResponse.success(page);
+    }
+    @ResponseBody
+    @GetMapping("/commodityPageInOrder")
+    public JsonResponse commodityPage(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO){
+        Page<Commodity> page = commodityService.commodityPageInOrder(pageDTO, commodity, sortDTO);
         return JsonResponse.success(page);
     }
     /**
@@ -101,6 +108,12 @@ public class CommodityController {
     public JsonResponse updateCommodity(Commodity commodity){
         boolean result = commodityService.updateById(commodity);
         return JsonResponse.success(result);
+    }
+    @ResponseBody
+    @GetMapping("/searchCommodities")
+    public JsonResponse searchCommodities(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO){
+        Page<Commodity> page = commodityService.searchCommodities(pageDTO, commodity, sortDTO);
+        return JsonResponse.success(page);
     }
 }
 

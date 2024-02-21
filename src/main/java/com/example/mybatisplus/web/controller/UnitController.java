@@ -1,5 +1,6 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -43,14 +44,16 @@ public class UnitController {
     }
 
     /**
-    * 描述：根据Id删除
-    *
-    */
+     * 根据id删除单位
+     * @param id
+     * @return boolean
+     * @throws Exception
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        unitService.removeById(id);
-        return JsonResponse.success(null);
+    public JsonResponse deleteById(@PathVariable("id") Integer id) throws Exception {
+        boolean result = unitService.removeById(id);
+        return JsonResponse.success(result);
     }
 
 
@@ -67,14 +70,21 @@ public class UnitController {
 
 
     /**
-    * 描述:创建Unit
-    *
-    */
-    @RequestMapping(value = "", method = RequestMethod.POST)
+     * 创建新单位
+     * @param unit 需要supId和unit属性不为空
+     * @return boolean
+     */
+    @RequestMapping(value = "/createUnit", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse create(Unit  unit) throws Exception {
-        unitService.save(unit);
-        return JsonResponse.success(null);
+    public JsonResponse create(@RequestBody Unit  unit) {
+        QueryWrapper<Unit> wrapper = new QueryWrapper<>();
+        wrapper.eq("sup_id", unit.getSupId()).eq("unit", unit.getUnit());
+        Unit u = unitService.getOne(wrapper);
+        boolean result = false;
+        if(u == null){
+            result = unitService.save(unit);
+        }
+        return JsonResponse.success(result);
     }
 
     /**

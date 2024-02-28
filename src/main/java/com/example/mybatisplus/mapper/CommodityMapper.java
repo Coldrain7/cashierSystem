@@ -8,6 +8,8 @@ import com.example.mybatisplus.model.dto.SortDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * 商品相关属性 Mapper 接口
@@ -33,4 +35,9 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     Page<Commodity> searchCommodityPage(Page page, @Param("commodity") Commodity commodity, @Param("sortDTO")SortDTO sortDTO);
 
     Commodity getUniqueBarcode(@Param("commodity") Commodity commodity);
+
+
+    Page<Commodity> advanceSearch(Page<Commodity> page, @Param("claIds")ArrayList<Integer> claIds,
+                                  @Param("supplierIds")ArrayList<Integer> supplierIds, @Param("commodity")Commodity commodity,
+                                  @Param("secondCommodity")Commodity secondCommodity, @Param("sortDTO") SortDTO sortDTO);
 }

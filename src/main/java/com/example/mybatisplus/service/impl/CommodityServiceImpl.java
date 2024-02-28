@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * 商品相关属性 服务实现类
@@ -61,5 +63,11 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             commodityMapper.searchCommodityPage(page, commodity, sortDTO);
         }
         return page;
+    }
+
+    @Override
+    public Page<Commodity> advanceSearch(Page<Commodity> page, ArrayList<Integer> claIds, ArrayList<Integer> supplierIds, Commodity commodity, Commodity secondCommodity, SortDTO sortDTO) {
+        sortDTO.isContain();
+        return commodityMapper.advanceSearch(page, claIds, supplierIds, commodity, secondCommodity, sortDTO);
     }
 }

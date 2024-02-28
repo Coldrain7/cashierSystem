@@ -24,7 +24,7 @@ public class SortDTO {
         propSet.add("create_time");
     }
     /**
-     * 装换大写字母为下划线加小写字母
+     * 转换大写字母为下划线加小写字母
      */
     private void convertProp(){
         if (prop == null) {

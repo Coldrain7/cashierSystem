@@ -146,5 +146,70 @@
             order by CONVERT(${sortDTO.prop} USING gbk) COLLATE gbk_chinese_ci ${sortDTO.order}
         </if>
     </select>
+    <select id="advanceSearch" resultMap="SearchPage">
+        select commodity.id,commodity.name,commodity.barcode,commodity.inventory,commodity.purchase_price,
+        commodity.price,commodity.specification,commodity.is_discount,commodity.wholesale_price,
+        commodity.produce_date,commodity.expiration_time,commodity.cla_id, commodity.unit_id,
+        commodity.supplier_id,commodity.sup_id,commodity.is_multibarcode,
+        classification.classification,
+        commodity.create_time,unit.unit,
+        supplier.name as supplier_name, supplier.number,
+        multibarcode.barcode as m_barcode
+        from commodity
+        left outer join supplier on commodity.supplier_id = supplier.id
+        left outer join classification on classification.id = commodity.cla_id
+        left outer join unit on commodity.unit_id = unit.id
+        left outer join multibarcode on multibarcode.com_id = commodity.id
+        <where>
+            commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
+            <if test="claIds.size()>0 and claIds != null">
+                and classification.id in
+                <foreach item="item" index="index" collection="claIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="supplierIds.size()>0 and supplierIds != null">
+                and supplier.id in
+                <foreach item="item" index="index" collection="supplierIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="commodity.isDiscount != null">
+                and commodity.is_discount = #{commodity.isDiscount}
+            </if>
+            <if test="commodity.createTime != null">
+                and #{commodity.createTime} &lt; commodity.create_time
+            </if>
+            <if test="secondCommodity.createTime != null">
+                and commodity.create_time &lt; #{secondCommodity.createTime}
+            </if>
+            <if test="commodity.price != null">
+                and #{commodity.price} &lt; commodity.price
+            </if>
+            <if test="secondCommodity.price != null">
+                and commodity.price &lt; #{secondCommodity.price}
+            </if>
+            <if test="commodity.inventory != null">
+                and #{commodity.inventory} &lt; commodity.inventory
+            </if>
+            <if test="secondCommodity.inventory != null">
+                and commodity.inventory &lt; #{secondCommodity.inventory}
+            </if>
+            <if test="commodity.name != null and commodity.name != ''">
+                and (commodity.name like '%${commodity.name}%'
+                or commodity.barcode like '%${commodity.barcode}%'
+                or multibarcode.barcode like '%${commodity.barcode}%')
+            </if>
+            <if test="commodity.specification != null and commodity.specification != ''">
+                and commodity.specification = #{commodity.specification}
+            </if>
+            <if test="commodity.isMultibarcode != null">
+                and commodity.is_multibarcode = #{commodity.isMultibarcode}
+            </if>
+        </where>
+        <if test="sortDTO.order == 'asc' or sortDTO.order == 'desc'">
+            order by CONVERT(${sortDTO.prop} USING gbk) COLLATE gbk_chinese_ci ${sortDTO.order}
+        </if>
+    </select>
 
 </mapper>

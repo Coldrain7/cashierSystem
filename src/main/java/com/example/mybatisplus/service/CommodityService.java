@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * 商品相关属性 服务类
@@ -29,4 +31,7 @@ public interface CommodityService extends IService<Commodity> {
     Commodity getUniqueBarcode(Commodity commodity);
 
     Page<Commodity> searchCommodities(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO);
+
+    Page<Commodity> advanceSearch(Page<Commodity> page, ArrayList<Integer> claIds, ArrayList<Integer> supplierIds,
+                                  Commodity commodity, Commodity secondCommodity, SortDTO sortDTO);
 }

@@ -79,6 +79,11 @@ public class ClassificationController {
         return JsonResponse.success(null);
     }
 
+    /**
+     * 查询店铺的所有分类，包含分类的所有属性
+     * @param supId 店铺id
+     * @return List<Classification>
+     */
     @ResponseBody
     @GetMapping("/getOptions")
     public JsonResponse getOptions(Integer supId){

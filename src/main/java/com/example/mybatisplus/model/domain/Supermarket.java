@@ -38,7 +38,7 @@ public class Supermarket extends Model<Supermarket> {
 
     private LocalDateTime createTime;
 
-    private LocalDateTime deleteTime;
+    private LocalDateTime updateTime;
 
 
     @Override

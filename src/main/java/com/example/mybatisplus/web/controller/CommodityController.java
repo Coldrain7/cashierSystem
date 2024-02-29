@@ -15,6 +15,7 @@ import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.service.CommodityService;
 import com.example.mybatisplus.model.domain.Commodity;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -79,6 +80,18 @@ public class CommodityController {
         // Commodity c = commodityService.getOne(wrapper);
         Commodity c = commodityService.getUniqueBarcode(commodity);
         if (c == null) {
+            if(commodity.getPrice() == null){
+                return JsonResponse.success(null,"销售价不能为空");
+            }
+            if(commodity.getPurchasePrice() == null){
+                return JsonResponse.success(null,"进货价不能为空");
+            }
+            if (commodity.getWholesalePrice() == null) {
+                commodity.setWholesalePrice(commodity.getPrice());
+            }
+            if(commodity.getName()==null){
+                return JsonResponse.success(null,"商品名称不能为空");
+            }
             long id = commodityService.insert(commodity);
             return JsonResponse.success(id);
         }
@@ -143,6 +156,11 @@ public class CommodityController {
     }
 
 
+    /**
+     * 高级搜索
+     * @param map 包含分类，供应商，会员折扣，创建时间from,to，价格区间，库存区间，关键字，规格，一品多码，排序，页码信息
+     * @return Page
+     */
     @ResponseBody
     @PostMapping("/advanceSearch")
     public JsonResponse advanceSearch(@RequestBody Map<String, Object> map) {
@@ -198,6 +216,12 @@ public class CommodityController {
                 Integer.parseInt(map.get("pageSize").toString()));
         page = commodityService.advanceSearch(page, claIds, supplierIds, commodity, secondCommodity, sortDTO);
         return JsonResponse.success(page);
+    }
+
+    @ResponseBody
+    @PostMapping("/exportCommodities")
+    public JsonResponse exportCommodities(HttpServletResponse httpServletResponse, @RequestBody Commodity commodity){
+        return(null);
     }
 }
 

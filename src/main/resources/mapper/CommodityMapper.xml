@@ -83,9 +83,9 @@
                commodity.create_time,unit.unit,
                supplier.name as supplier_name, supplier.number
         from commodity
-        left outer join supplier on commodity.supplier_id = supplier.id
-        left outer join classification on classification.id = commodity.cla_id
-        left outer join unit on commodity.unit_id = unit.id
+        left outer join supplier on commodity.supplier_id = supplier.id and supplier.is_deleted = 0
+        left outer join classification on classification.id = commodity.cla_id and classification.is_deleted = 0
+        left outer join unit on commodity.unit_id = unit.id and unit.is_deleted = 0
         <where>
             commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
             <if test="commodity.claId > 0">
@@ -108,9 +108,9 @@
         commodity.create_time,unit.unit,
         supplier.name as supplier_name, supplier.number
         from commodity
-        left outer join supplier on commodity.supplier_id = supplier.id
-        left outer join classification on classification.id = commodity.cla_id
-        left outer join unit on commodity.unit_id = unit.id
+        left outer join supplier on commodity.supplier_id = supplier.id and supplier.is_deleted = 0
+        left outer join classification on classification.id = commodity.cla_id and classification.is_deleted = 0
+        left outer join unit on commodity.unit_id = unit.id and unit.is_deleted = 0
         <where>
          commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
             <if test="commodity.claId > 0">
@@ -129,10 +129,10 @@
         supplier.name as supplier_name, supplier.number,
         multibarcode.barcode as m_barcode
         from commodity
-        left outer join supplier on commodity.supplier_id = supplier.id
-        left outer join classification on classification.id = commodity.cla_id
-        left outer join unit on commodity.unit_id = unit.id
-        left outer join multibarcode on multibarcode.com_id = commodity.id
+        left outer join supplier on commodity.supplier_id = supplier.id and supplier.is_deleted = 0
+        left outer join classification on classification.id = commodity.cla_id and classification.is_deleted = 0
+        left outer join unit on commodity.unit_id = unit.id and unit.is_deleted = 0
+        left outer join multibarcode on multibarcode.com_id = commodity.id and multibarcode.is_deleted = 0
         <where>
             commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
                 and (commodity.name like '%${commodity.name}%'
@@ -156,10 +156,10 @@
         supplier.name as supplier_name, supplier.number,
         multibarcode.barcode as m_barcode
         from commodity
-        left outer join supplier on commodity.supplier_id = supplier.id
-        left outer join classification on classification.id = commodity.cla_id
-        left outer join unit on commodity.unit_id = unit.id
-        left outer join multibarcode on multibarcode.com_id = commodity.id
+        left outer join supplier on commodity.supplier_id = supplier.id and supplier.is_deleted = 0
+        left outer join classification on classification.id = commodity.cla_id and classification.is_deleted = 0
+        left outer join unit on commodity.unit_id = unit.id and unit.is_deleted = 0
+        left outer join multibarcode on multibarcode.com_id = commodity.id and multibarcode.is_deleted = 0
         <where>
             commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
             <if test="claIds.size()>0 and claIds != null">

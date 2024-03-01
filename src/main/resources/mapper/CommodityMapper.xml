@@ -135,9 +135,11 @@
         left outer join multibarcode on multibarcode.com_id = commodity.id and multibarcode.is_deleted = 0
         <where>
             commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
+            <if test="commodity.name != null and commodity.name != ''">
                 and (commodity.name like '%${commodity.name}%'
                 or commodity.barcode like '%${commodity.barcode}%'
                 or multibarcode.barcode like '%${commodity.barcode}%')
+            </if>
             <if test="commodity.claId > 0">
                 and commodity.cla_id = #{commodity.claId}
             </if>

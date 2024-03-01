@@ -44,7 +44,7 @@ public class SortDTO {
 
     /**
      * 转化前端传来的字段为sql查询需要的形式，并判断是否能进行排序
-     * @return boolean
+     * @return 能排序返回true,否则false
      */
     public boolean isContain(){
         convertProp();

@@ -16,9 +16,11 @@ import com.example.mybatisplus.service.CommodityService;
 import com.example.mybatisplus.model.domain.Commodity;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -151,6 +153,7 @@ public class CommodityController {
     @ResponseBody
     @GetMapping("/searchCommodities")
     public JsonResponse searchCommodities(PageDTO pageDTO, Commodity commodity, SortDTO sortDTO) {
+        //未对commodity的name与barcode赋值，不满足条件不能进行关键字搜索，需要前端对这两个值赋值
         Page<Commodity> page = commodityService.searchCommodities(pageDTO, commodity, sortDTO);
         return JsonResponse.success(page);
     }
@@ -218,10 +221,16 @@ public class CommodityController {
         return JsonResponse.success(page);
     }
 
+    /**
+     * 基本的导出商品方法，可接收一个commodity类作为查询条件
+     * @param httpServletResponse 响应
+     * @param commodity 包含查询条件的商品类
+     * @throws IOException
+     */
     @ResponseBody
     @PostMapping("/exportCommodities")
-    public JsonResponse exportCommodities(HttpServletResponse httpServletResponse, @RequestBody Commodity commodity){
-        return(null);
+    public void exportCommodities(HttpServletResponse httpServletResponse, @RequestBody Commodity commodity) throws IOException {
+        commodityService.exportCommodities(httpServletResponse, commodity);
     }
 }
 

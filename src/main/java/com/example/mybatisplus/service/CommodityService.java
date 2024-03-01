@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -34,4 +36,6 @@ public interface CommodityService extends IService<Commodity> {
 
     Page<Commodity> advanceSearch(Page<Commodity> page, ArrayList<Integer> claIds, ArrayList<Integer> supplierIds,
                                   Commodity commodity, Commodity secondCommodity, SortDTO sortDTO);
+
+    void exportCommodities(HttpServletResponse httpServletResponse, Commodity commodity) throws IOException;
 }

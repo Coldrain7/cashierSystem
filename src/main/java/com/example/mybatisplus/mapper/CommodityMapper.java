@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -23,17 +24,31 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
 
     Page<Commodity> selectCommodityPage(Page page, @Param("commodity")Commodity commodity);
 
+
+    /**
+     * 不包含搜索功能只包含排序的查询
+     * @param page 分页器
+     * @param commodity 商品类
+     * @param sortDTO 必须能够排序
+     * @return Page
+     */
     Page<Commodity> selectCommodityInOrder(Page page, @Param("commodity")Commodity commodity, @Param("sortDTO") SortDTO sortDTO);
 
     /**
      * 根据传入Commodity对象的name和barcode字段查询，根据sortDTO中的字段排序
      * @param page 分页器
-     * @param commodity 需要包含name和barcode字段，不能为空
+     * @param commodity 需要包含name和barcode字段，不能为null或""
      * @param sortDTO order字段为asc或desc时才能排序
      * @return Page<Commodity>
      */
     Page<Commodity> searchCommodityPage(Page page, @Param("commodity") Commodity commodity, @Param("sortDTO")SortDTO sortDTO);
-
+    /**
+     * 根据传入Commodity对象的name和barcode字段查询，根据sortDTO中的字段排序
+     * @param commodity 需要包含name和barcode字段，不能为null或""
+     * @param sortDTO order字段为asc或desc时才能排序
+     * @return 所有符合条件的商品，不分页
+     */
+    List<Commodity> searchCommodityPage(@Param("commodity") Commodity commodity, @Param("sortDTO")SortDTO sortDTO);
     Commodity getUniqueBarcode(@Param("commodity") Commodity commodity);
 
 

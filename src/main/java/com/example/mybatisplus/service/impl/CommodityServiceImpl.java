@@ -100,4 +100,11 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         List<Commodity> commodities = commodityMapper.searchCommodityPage(commodity, sortDTO);
         ExcelUtils.exportCommodities(httpServletResponse, commodities);
     }
+
+    @Override
+    public void exportCommodities(HttpServletResponse httpServletResponse, ArrayList<Integer> claIds, ArrayList<Integer> supplierIds, Commodity commodity, Commodity secondCommodity) throws IOException {
+        SortDTO sortDTO = new SortDTO();
+        List<Commodity> commodities = commodityMapper.advanceSearch(claIds, supplierIds, commodity, secondCommodity, sortDTO);
+        ExcelUtils.exportCommodities(httpServletResponse, commodities);
+    }
 }

@@ -55,4 +55,7 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     Page<Commodity> advanceSearch(Page<Commodity> page, @Param("claIds")ArrayList<Integer> claIds,
                                   @Param("supplierIds")ArrayList<Integer> supplierIds, @Param("commodity")Commodity commodity,
                                   @Param("secondCommodity")Commodity secondCommodity, @Param("sortDTO") SortDTO sortDTO);
+    List<Commodity> advanceSearch(@Param("claIds")ArrayList<Integer> claIds,
+                                  @Param("supplierIds")ArrayList<Integer> supplierIds, @Param("commodity")Commodity commodity,
+                                  @Param("secondCommodity")Commodity secondCommodity, @Param("sortDTO") SortDTO sortDTO);
 }

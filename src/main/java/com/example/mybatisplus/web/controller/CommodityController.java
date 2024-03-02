@@ -232,5 +232,46 @@ public class CommodityController {
     public void exportCommodities(HttpServletResponse httpServletResponse, @RequestBody Commodity commodity) throws IOException {
         commodityService.exportCommodities(httpServletResponse, commodity);
     }
+    @ResponseBody
+    @PostMapping("/advanceExport")
+    public void advanceExport(HttpServletResponse httpServletResponse, @RequestBody Map<String, Object> map) throws IOException {
+        ArrayList<Integer> claIds = (ArrayList<Integer>) map.get("claIds");
+        ArrayList<Integer> supplierIds = (ArrayList<Integer>) map.get("supplierIds");
+        Commodity commodity = new Commodity();
+        if(map.get("supId") == null){
+           return;
+        }
+        commodity.setSupId(Integer.parseInt(map.get("supId").toString()));
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if(!(map.get("timeFrom") == null || map.get("timeFrom").equals(""))){
+            commodity.setCreateTime(LocalDateTime.parse(map.get("timeFrom").toString(), df));//起始时间
+        }
+        if(!(map.get("priceFrom") == null || map.get("priceFrom").equals(""))){
+            commodity.setPrice(Double.parseDouble(map.get("priceFrom").toString()));//起始价格
+        }
+        if(!(map.get("inventoryFrom") == null || map.get("inventoryFrom").equals(""))){
+            commodity.setInventory(Double.parseDouble(map.get("inventoryFrom").toString()));//起始库存
+        }
+        if(!(map.get("isDiscount") == null || map.get("isDiscount").equals(""))){
+            commodity.setIsDiscount(Boolean.parseBoolean(map.get("isDiscount").toString()));
+        }
+        commodity.setName(map.get("name").toString());
+        commodity.setBarcode(commodity.getName());
+        commodity.setSpecification(map.get("specification").toString());
+        if(!(map.get("isMultibarcode") == null || map.get("isMultibarcode").equals(""))){
+            commodity.setIsMultibarcode(Boolean.parseBoolean(map.get("isMultibarcode").toString()));
+        }
+        Commodity secondCommodity = new Commodity();
+        if(!(map.get("timeTo") == null || map.get("timeTo").equals(""))){
+            secondCommodity.setCreateTime(LocalDateTime.parse(map.get("timeTo").toString(), df));//结束时间
+        }
+        if(!(map.get("priceTo") == null || map.get("priceTo").equals(""))){
+            secondCommodity.setPrice(Double.parseDouble(map.get("priceTo").toString()));//结束价格
+        }
+        if(!(map.get("inventoryTo") == null || map.get("inventoryTo").equals(""))){
+            secondCommodity.setInventory(Double.parseDouble(map.get("inventoryTo").toString()));//结束库存
+        }
+        commodityService.exportCommodities(httpServletResponse, claIds, supplierIds, commodity, secondCommodity);
+    }
 }
 

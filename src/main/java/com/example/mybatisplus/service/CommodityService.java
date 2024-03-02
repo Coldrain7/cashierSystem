@@ -38,4 +38,9 @@ public interface CommodityService extends IService<Commodity> {
                                   Commodity commodity, Commodity secondCommodity, SortDTO sortDTO);
 
     void exportCommodities(HttpServletResponse httpServletResponse, Commodity commodity) throws IOException;
+
+
+    void exportCommodities(HttpServletResponse httpServletResponse, ArrayList<Integer> claIds,
+                           ArrayList<Integer> supplierIds, Commodity commodity, Commodity secondCommodity)
+            throws IOException;
 }

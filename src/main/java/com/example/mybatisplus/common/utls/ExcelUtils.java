@@ -421,6 +421,216 @@ public class ExcelUtils {
         hwb.close();
     }
 
+    public static void exportTemplate(HttpServletResponse response) throws IOException {
+        //声明一个表格对象
+        HSSFWorkbook hwb = new HSSFWorkbook();
+        //声明一个sheet并命名
+        HSSFSheet sheet = hwb.createSheet("商品信息");
+        //给sheet名称一个长度
+        sheet.setDefaultColumnWidth((short) 10);
+        //商品名称
+        sheet.setColumnWidth(0, 30 * 256);
+        //条码
+        sheet.setColumnWidth(1, 20 * 256);
+        //分类
+        sheet.setColumnWidth(2, 8 * 256);
+        //库存
+        sheet.setColumnWidth(3, 8 * 256);
+        //单位
+        sheet.setColumnWidth(4, 8 * 256);
+        //规格
+        sheet.setColumnWidth(5, "数字中间以字母x连接，如1x8".getBytes().length * 256);
+        //进货价
+        sheet.setColumnWidth(6, 12 * 256);
+        //销售价
+        sheet.setColumnWidth(7, 12 * 256);
+        //批发价
+        sheet.setColumnWidth(8, 12 * 256);
+        //会员折扣
+        sheet.setColumnWidth(9, 16 * 256);
+        //供货商
+        sheet.setColumnWidth(10, 30 * 256);
+        //生产日期
+        sheet.setColumnWidth(11, 20 * 256);
+        //保质期
+        sheet.setColumnWidth(12, 12 * 256);
+        // 设置单元格格式为文本格式
+        HSSFCellStyle textStyle = hwb.createCellStyle();
+        HSSFDataFormat format = hwb.createDataFormat();
+        textStyle.setDataFormat(format.getFormat("@"));
+        //设置单元格格式为"文本"
+        sheet.setDefaultColumnStyle(6, textStyle);
+
+        //设置下拉框
+        // DataValidationHelper helper = sheet.getDataValidationHelper();
+
+        //生成表头样式
+        HSSFCellStyle headStyle = hwb.createCellStyle();
+        headStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headStyle.setBorderBottom(BorderStyle.THIN);
+        headStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderLeft(BorderStyle.THIN);
+        headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderRight(BorderStyle.THIN);
+        headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderTop(BorderStyle.THIN);
+        headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setAlignment(HorizontalAlignment.CENTER);
+        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 生成一个字体
+        HSSFFont headFont = hwb.createFont();
+        headFont.setFontName("宋体");
+        headFont.setFontHeightInPoints((short) 16);
+        headFont.setBold(true);
+        // 把字体应用到当前的样式
+        headStyle.setFont(headFont);
+
+        //公用样式
+        HSSFCellStyle style = hwb.createCellStyle();
+        style.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setWrapText(true);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 生成一个字体
+        HSSFFont font = hwb.createFont();
+        font.setFontName("Book Antiqua");
+        font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
+        // 把字体应用到当前的样式
+        style.setFont(font);
+
+        //创建表标题
+        HSSFRow headerRow = sheet.createRow(0);
+        //样式字体居中
+        headerRow.setHeightInPoints(20);
+        headerRow.setHeight((short) (34.40 * 20));
+        HSSFCell cell0 = headerRow.createCell(0);
+        HSSFCell cell7 = headerRow.createCell(12);
+        cell0.setCellValue("导入模板");
+        cell0.setCellStyle(headStyle);
+        cell7.setCellStyle(headStyle);
+        CellRangeAddress cellAddresses = new CellRangeAddress(0, 0, 0, 12);
+        sheet.addMergedRegion(cellAddresses);
+
+        //创建表头
+        HSSFRow row = sheet.createRow(1);
+        row.setHeight((short) (20.40 * 20));
+        //给表头第一行一次创建单元格
+        HSSFCell cell = row.createCell((short) 0);
+        cell.setCellValue("商品名称");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 1);
+        cell.setCellValue("条码");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 2);
+        cell.setCellValue("分类");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 3);
+        cell.setCellValue("库存");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 4);
+        cell.setCellValue("单位");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 5);
+        cell.setCellValue("规格");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 6);
+        cell.setCellValue("进货价");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 7);
+        cell.setCellValue("销售价");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 8);
+        cell.setCellValue("批发价");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 9);
+        cell.setCellValue("会员折扣");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 10);
+        cell.setCellValue("供货商");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 11);
+        cell.setCellValue("生产日期");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 12);
+        cell.setCellValue("保质期");
+        cell.setCellStyle(style);
+
+
+        //表格内部样式
+        HSSFCellStyle commStyle = hwb.createCellStyle();
+        commStyle.setBorderBottom(BorderStyle.THIN);
+        commStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderLeft(BorderStyle.THIN);
+        commStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderRight(BorderStyle.THIN);
+        commStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderTop(BorderStyle.THIN);
+        commStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setAlignment(HorizontalAlignment.CENTER);
+        commStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        HSSFFont font1 = hwb.createFont();
+        font1.setFontName("Book Antiqua");
+        font1.setFontHeightInPoints((short) 10);
+        commStyle.setFont(font1);
+        row = sheet.createRow(2);
+        row.setHeight((short) (20.40 * 20));
+        //给表头第一行一次创建单元格
+        cell = row.createCell((short) 0);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 1);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 2);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 3);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 4);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 5);
+        cell.setCellValue("数字中间以字母x连接，如1x8");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 6);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 7);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 8);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 9);
+        cell.setCellValue("’是‘或’否‘");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 10);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 11);
+        cell.setCellValue("yyyy-MM-dd,如2000-01-01");
+        cell.setCellStyle(commStyle);
+        cell = row.createCell((short) 12);
+        cell.setCellValue("");
+        cell.setCellStyle(commStyle);
+        hwb.write(response.getOutputStream());
+        hwb.close();
+    }
+
+
     public static void checkFile(MultipartFile formFile) throws IOException {
         //判断文件是否存在
         if (null == formFile) {

@@ -107,4 +107,13 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         List<Commodity> commodities = commodityMapper.advanceSearch(claIds, supplierIds, commodity, secondCommodity, sortDTO);
         ExcelUtils.exportCommodities(httpServletResponse, commodities);
     }
+
+    @Override
+    public void exportTemplate(HttpServletResponse httpServletResponse) {
+        try {
+            ExcelUtils.exportTemplate(httpServletResponse);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

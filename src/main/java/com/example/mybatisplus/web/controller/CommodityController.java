@@ -2,6 +2,7 @@ package com.example.mybatisplus.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.common.utls.ExcelUtils;
 import com.example.mybatisplus.model.domain.Book;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
@@ -232,6 +233,13 @@ public class CommodityController {
     public void exportCommodities(HttpServletResponse httpServletResponse, @RequestBody Commodity commodity) throws IOException {
         commodityService.exportCommodities(httpServletResponse, commodity);
     }
+
+    /**
+     * 对应高级搜索的导出方法
+     * @param httpServletResponse http响应
+     * @param map 查询条件
+     * @throws IOException
+     */
     @ResponseBody
     @PostMapping("/advanceExport")
     public void advanceExport(HttpServletResponse httpServletResponse, @RequestBody Map<String, Object> map) throws IOException {
@@ -272,6 +280,11 @@ public class CommodityController {
             secondCommodity.setInventory(Double.parseDouble(map.get("inventoryTo").toString()));//结束库存
         }
         commodityService.exportCommodities(httpServletResponse, claIds, supplierIds, commodity, secondCommodity);
+    }
+    @ResponseBody
+    @PostMapping("/exportTemplate")
+    public void exportTemplate(HttpServletResponse httpServletResponse){
+        commodityService.exportTemplate(httpServletResponse);
     }
 }
 

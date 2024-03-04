@@ -12,5 +12,14 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="supplierMap" type="com.example.mybatisplus.model.dto.SupplierDTO">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
+    <select id="getSupplierList" resultMap="supplierMap">
+        select name, id
+        from supplier
+        where is_deleted = 0 and sup_id = #{supId}
+    </select>
 
 </mapper>

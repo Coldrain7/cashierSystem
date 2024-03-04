@@ -3,6 +3,7 @@ package com.example.mybatisplus.web.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.service.CommodityService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -103,14 +104,15 @@ public class MultibarcodeController {
      * @return boolean
      */
     @ResponseBody
-    @PostMapping ("/addBarcodes")
-    public JsonResponse addBarcodes(@RequestBody List<Multibarcode> barcodes){
+    @PostMapping ("/addBarcodes/{supId}")
+    public JsonResponse addBarcodes(@RequestBody List<Multibarcode> barcodes, @PathVariable("supId")Integer supId){
         Commodity commodity = new Commodity();
         for(int i=0; i<barcodes.size(); i++){
             if(barcodes.get(i).getComId() == null){
                 return JsonResponse.success(false, "缺少商品id");
             }
             commodity.setBarcode(barcodes.get(i).getBarcode());
+            commodity.setSupId(supId);
             Commodity c = commodityService.getUniqueBarcode(commodity);
             if(c == null){
                 multibarcodeService.save(barcodes.get((i)));

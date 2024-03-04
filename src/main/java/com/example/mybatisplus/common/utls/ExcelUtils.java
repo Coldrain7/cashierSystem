@@ -445,7 +445,7 @@ public class ExcelUtils {
         //销售价
         sheet.setColumnWidth(7, 12 * 256);
         //批发价
-        sheet.setColumnWidth(8, 12 * 256);
+        sheet.setColumnWidth(8, "可不填，默认同销售价".getBytes().length * 256);
         //会员折扣
         sheet.setColumnWidth(9, 16 * 256);
         //供货商
@@ -588,10 +588,10 @@ public class ExcelUtils {
         row.setHeight((short) (20.40 * 20));
         //给表头第一行一次创建单元格
         cell = row.createCell((short) 0);
-        cell.setCellValue("");
+        cell.setCellValue("必填");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 1);
-        cell.setCellValue("");
+        cell.setCellValue("必填");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 2);
         cell.setCellValue("");
@@ -606,13 +606,13 @@ public class ExcelUtils {
         cell.setCellValue("数字中间以字母x连接，如1x8");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 6);
-        cell.setCellValue("");
+        cell.setCellValue("必填");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 7);
-        cell.setCellValue("");
+        cell.setCellValue("必填");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 8);
-        cell.setCellValue("");
+        cell.setCellValue("可不填，默认同销售价");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 9);
         cell.setCellValue("’是‘或’否‘");
@@ -621,7 +621,7 @@ public class ExcelUtils {
         cell.setCellValue("");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 11);
-        cell.setCellValue("yyyy-MM-dd,如2000-01-01");
+        cell.setCellValue("yyyy-mm-dd,如2000-01-01");
         cell.setCellStyle(commStyle);
         cell = row.createCell((short) 12);
         cell.setCellValue("");

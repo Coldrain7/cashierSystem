@@ -49,6 +49,12 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
      * @return 所有符合条件的商品，不分页
      */
     List<Commodity> searchCommodityPage(@Param("commodity") Commodity commodity, @Param("sortDTO")SortDTO sortDTO);
+
+    /**
+     * 关联commodity表和multibarcode表查询所属店铺条码是否已存在
+     * @param commodity barcode字段和supId不能为空
+     * @return 若条码已存在返回商品，否则返回空
+     */
     Commodity getUniqueBarcode(@Param("commodity") Commodity commodity);
 
 

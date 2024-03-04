@@ -1,6 +1,7 @@
 package com.example.mybatisplus.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.PageDTO;
@@ -9,6 +10,7 @@ import com.example.mybatisplus.model.dto.SortDTO;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -45,4 +47,6 @@ public interface CommodityService extends IService<Commodity> {
             throws IOException;
 
     void exportTemplate(HttpServletResponse httpServletResponse);
+
+    JsonResponse importCommodities(List<String[]> strings, int supId);
 }

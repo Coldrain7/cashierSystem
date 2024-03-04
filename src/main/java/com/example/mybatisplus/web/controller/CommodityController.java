@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.service.CommodityService;
 import com.example.mybatisplus.model.domain.Commodity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -281,10 +282,34 @@ public class CommodityController {
         }
         commodityService.exportCommodities(httpServletResponse, claIds, supplierIds, commodity, secondCommodity);
     }
+
+    /**
+     * 下载导入模板
+     * @param httpServletResponse http响应
+     */
     @ResponseBody
     @PostMapping("/exportTemplate")
     public void exportTemplate(HttpServletResponse httpServletResponse){
         commodityService.exportTemplate(httpServletResponse);
+    }
+
+    /**
+     * 前端要传入supId以在后端插入时验证店铺是否已有该条码
+     * @param multipartFile 文件
+     * @param supId 需要包含supId
+     * @return 成功或失败信息
+     */
+    @ResponseBody
+    @PostMapping("/importCommodities")
+    public JsonResponse importCommodities(@RequestParam("file")MultipartFile multipartFile, @RequestParam Integer supId){
+        try {
+            // int supId = Integer.parseInt(map.get("supId").toString());
+            List<String[]> strings = ExcelUtils.readExcel(multipartFile);
+            return commodityService.importCommodities(strings, supId);
+        } catch (IOException e) {
+            return JsonResponse.failure("读取导入文件错误");
+            // throw new RuntimeException(e);
+        }
     }
 }
 

@@ -12,5 +12,14 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="classificationMap" type="com.example.mybatisplus.model.dto.ClassificationDTO">
+        <id column="id" property="id" />
+        <result column="classification" property="classification" />
+    </resultMap>
+    <select id="getClassificationList" resultMap="classificationMap">
+        select id, classification
+        from classification
+        where is_deleted = 0 and sup_id = #{supId}
+    </select>
 
 </mapper>

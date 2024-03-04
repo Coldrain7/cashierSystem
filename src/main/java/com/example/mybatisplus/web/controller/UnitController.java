@@ -70,7 +70,7 @@ public class UnitController {
 
 
     /**
-     * 创建新单位
+     * 创建新单位，数据库已存在此单位就不新建
      * @param unit 需要supId和unit属性不为空
      * @return boolean
      */

@@ -66,7 +66,7 @@
         <association property="supplier"  javaType="com.example.mybatisplus.model.domain.Supplier" resultMap="SupplierMap"></association>
     </resultMap>
     <resultMap id="UniqueBarcode" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
-        <association property="multibarcodes"  javaType="com.example.mybatisplus.model.domain.Multibarcode" resultMap="MultiBarcodeMap"></association>
+        <collection property="multibarcodes"  ofType="com.example.mybatisplus.model.domain.Multibarcode" resultMap="MultiBarcodeMap"></collection>
     </resultMap>
     <resultMap id="SearchPage" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
         <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
@@ -98,6 +98,7 @@
         from commodity left outer join multibarcode
         on commodity.id = multibarcode.com_id and commodity.is_deleted = 0 and multibarcode.is_deleted = 0
         where (commodity.barcode = #{commodity.barcode} or multibarcode.barcode = #{commodity.barcode})
+        and sup_id = #{commodity.supId}
     </select>
     <select id="selectCommodityInOrder" resultMap="CommodityPage">
         select commodity.id,commodity.name,commodity.barcode,commodity.inventory,commodity.purchase_price,

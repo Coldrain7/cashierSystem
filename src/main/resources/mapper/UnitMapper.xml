@@ -11,5 +11,14 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="unitMap" type="com.example.mybatisplus.model.dto.UnitDTO">
+        <id column="id" property="id"/>
+        <result column="unit" property="unit"/>
+    </resultMap>
+    <select id="getUnitList" resultMap="unitMap">
+        select unit, id
+        from unit
+        where sup_id = #{supId} and is_deleted = 0;
+    </select>
 
 </mapper>

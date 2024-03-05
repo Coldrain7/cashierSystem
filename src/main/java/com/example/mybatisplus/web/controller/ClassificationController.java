@@ -69,18 +69,32 @@ public class ClassificationController {
 
 
     /**
-    * 描述:创建Classification
-    *
-    */
-    @RequestMapping(value = "", method = RequestMethod.POST)
+     * 新增父分类
+     * @param classification 需要包含supId与classification
+     * @return 保存成功status返回true，否则返回false
+     */
+    @RequestMapping(value = "/createClassification", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse create(Classification  classification) throws Exception {
-        classificationService.save(classification);
-        return JsonResponse.success(null);
+    public JsonResponse create(@RequestBody Classification  classification){
+        if(StringUtils.isBlank(classification.getClassification())){
+            return JsonResponse.failure("新增分类失败：分类名不能为空");
+        }
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        wrapper.eq("classification", classification.getClassification())
+                .eq("sup_id", classification.getSupId());
+        if(classificationService.getOne(wrapper)!= null){
+            return JsonResponse.failure("新增分类失败：分类名已存在");
+        }
+        boolean res = classificationService.save(classification);
+        if(res){
+            return JsonResponse.success("保存成功");
+        }else {
+            return JsonResponse.failure("新增分类失败");
+        }
     }
 
     /**
-     * 查询店铺的所有分类，包含分类的所有属性
+     * 查询店铺的所有父子分类，包含分类的所有属性
      * @param supId 店铺id
      * @return List<Classification>
      */

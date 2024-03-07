@@ -2,6 +2,7 @@ package com.example.mybatisplus.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -51,8 +52,8 @@ public class ClassificationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        classificationService.removeById(id);
-        return JsonResponse.success(null);
+        boolean res = classificationService.removeById(id);
+        return JsonResponse.success(res);
     }
 
 
@@ -85,10 +86,10 @@ public class ClassificationController {
         if(classificationService.getOne(wrapper)!= null){
             return JsonResponse.failure("新增分类失败：分类名已存在");
         }
-        boolean res = classificationService.save(classification);
-        if(res){
-            return JsonResponse.success("保存成功");
-        }else {
+        try{
+            int id = classificationService.insert(classification);
+            return JsonResponse.success(id, "新增分类成功");
+        }catch (DataIntegrityViolationException e){
             return JsonResponse.failure("新增分类失败");
         }
     }
@@ -103,6 +104,22 @@ public class ClassificationController {
     public JsonResponse getOptions(Integer supId){
         List<Classification> classifications = classificationService.getSupClassifications(supId);
         return JsonResponse.success(classifications);
+    }
+
+    /**
+     * 查询分类名称相似的分类
+     * @param classification 必须包含supId
+     * @return 分类名称相似的分类，如果有子分类或父分类则一同返回
+     */
+    @ResponseBody
+    @GetMapping("/searchClassifications")
+    public JsonResponse searchClassifications(Classification classification){
+        if(StringUtils.isNotBlank(classification.getClassification())){
+            return JsonResponse.success(classificationService.searchClassifications(classification));
+        }else{
+            return JsonResponse.success(classificationService.getSupClassifications(classification.getSupId()));
+        }
+
     }
 }
 

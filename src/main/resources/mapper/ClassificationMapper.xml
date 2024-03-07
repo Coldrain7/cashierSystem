@@ -21,5 +21,20 @@
         from classification
         where is_deleted = 0 and sup_id = #{supId}
     </select>
+    <select id="searchClassifications" resultType="com.example.mybatisplus.model.domain.Classification">
+        WITH SubqueryResult AS (
+            SELECT cla_id AS c_id
+            FROM classification
+            WHERE is_deleted = 0
+              AND sup_id = #{classification.supId}
+              AND classification LIKE '%${classification.classification}%'
+        )
+        SELECT *
+        FROM classification
+        WHERE id in (SELECT c_id FROM SubqueryResult)
+           OR cla_id in (SELECT c_id FROM SubqueryResult)
+            and is_deleted = 0
+            AND sup_id = #{classification.supId}
+    </select>
 
 </mapper>

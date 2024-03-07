@@ -21,4 +21,5 @@ public interface ClassificationMapper extends BaseMapper<Classification> {
 
     List<ClassificationDTO> getClassificationList(@Param("supId") int supId);
 
+    List<Classification> searchClassifications(@Param("classification")Classification classification);
 }

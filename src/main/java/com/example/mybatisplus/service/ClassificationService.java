@@ -16,4 +16,8 @@ import java.util.List;
 public interface ClassificationService extends IService<Classification> {
 
     List<Classification> getSupClassifications(Integer supId);
+
+    int insert(Classification classification);
+
+    List<Classification> searchClassifications(Classification classification);
 }

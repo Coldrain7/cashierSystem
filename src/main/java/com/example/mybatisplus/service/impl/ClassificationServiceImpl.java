@@ -33,4 +33,15 @@ public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper,
             return null;
         }
     }
+
+    @Override
+    public int insert(Classification classification) {
+        classificationMapper.insert(classification);
+        return classification.getId();
+    }
+
+    @Override
+    public List<Classification> searchClassifications(Classification classification) {
+        return classificationMapper.searchClassifications(classification);
+    }
 }

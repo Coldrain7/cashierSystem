@@ -1,6 +1,7 @@
 package com.example.mybatisplus.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mybatisplus.model.dto.PageDTO;
@@ -64,4 +65,8 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     List<Commodity> advanceSearch(@Param("claIds")ArrayList<Integer> claIds,
                                   @Param("supplierIds")ArrayList<Integer> supplierIds, @Param("commodity")Commodity commodity,
                                   @Param("secondCommodity")Commodity secondCommodity, @Param("sortDTO") SortDTO sortDTO);
+
+    List<Combination> selectCombinations(@Param("supId") Integer supId);
+
+    List<Combination> searchCombinations(@Param("commodity") Commodity commodity);
 }

@@ -8,6 +8,7 @@ import com.example.mybatisplus.mapper.ClassificationMapper;
 import com.example.mybatisplus.mapper.SupplierMapper;
 import com.example.mybatisplus.mapper.UnitMapper;
 import com.example.mybatisplus.model.domain.Book;
+import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.mapper.CommodityMapper;
 import com.example.mybatisplus.model.dto.*;
@@ -292,5 +293,25 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             return JsonResponse.failure(stringBuilder.toString());
         }
         return JsonResponse.success("成功导入"+commodities.size()+"条数据", stringBuilder.toString());
+    }
+
+    @Override
+    public List<Combination> getCombinations(Integer supId) {
+        return commodityMapper.selectCombinations(supId);
+    }
+
+    @Override
+    public Commodity getOneCommodity(QueryWrapper<Commodity> wrapper) {
+        List<Commodity> commodities = commodityMapper.selectList(wrapper);
+        if(commodities.size() > 1){
+            throw new RuntimeException("查询到的商品过多，请输入更长的条码位数");
+        }else{
+            return commodities.get(0);
+        }
+    }
+
+    @Override
+    public List<Combination> searchCombinations(Commodity commodity) {
+        return commodityMapper.searchCombinations(commodity);
     }
 }

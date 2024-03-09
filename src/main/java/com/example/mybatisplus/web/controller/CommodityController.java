@@ -1,11 +1,15 @@
 package com.example.mybatisplus.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.common.utls.ExcelUtils;
 import com.example.mybatisplus.model.domain.Book;
+import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
+import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -24,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 
 /**
@@ -54,6 +59,28 @@ public class CommodityController {
     public JsonResponse getById(@PathVariable("id") Long id) throws Exception {
         Commodity commodity = commodityService.getById(id);
         return JsonResponse.success(commodity);
+    }
+
+    /**
+     * 根据条码和店铺id查询商品
+     * @param commodity 需要包含barcode和supId
+     * @return 查询失败返回错误信息，成功则返回数据，包含所有属性
+     */
+    @ResponseBody
+    @GetMapping("/getCommodity")
+    public JsonResponse getCommodity(Commodity commodity){
+        QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
+        wrapper.like("barcode", commodity.getBarcode()).eq("sup_id", commodity.getSupId());
+        try{
+            Commodity c = commodityService.getOneCommodity(wrapper);
+            if(c == null){
+                return JsonResponse.failure("商品不存在");
+            }else {
+                return JsonResponse.success(c);
+            }
+        }catch (RuntimeException e){
+            return JsonResponse.failure(e.getMessage());
+        }
     }
 
     /**
@@ -134,14 +161,35 @@ public class CommodityController {
     /**
      * 根据id更新商品
      *
-     * @param commodity 商品实体，包含要修改的属性值
-     * @return boolean
+     * @param commodity 商品实体，包含要修改的属性值和id
+     * @return 修改成功返回true,否则返回false
      */
     @ResponseBody
     @GetMapping("/updateCommodity")
     public JsonResponse updateCommodity(Commodity commodity) {
-        boolean result = commodityService.updateById(commodity);
-        return JsonResponse.success(result);
+        Pattern pattern = Pattern.compile("^\\d+x\\d+$");
+        if(pattern.matcher(commodity.getSpecification()).matches()){
+            System.out.println(commodity.getParent());
+            boolean result = commodityService.updateById(commodity);
+            return JsonResponse.success(result);
+        }else{
+            return JsonResponse.failure("规格形式不匹配");
+        }
+
+    }
+
+    /**
+     * 删除组合拆分关系，实际是将子商品的parent置为null
+     * @param commodity 必须包含id
+     * @return data为true如果成功修改，否则为false
+     */
+    @ResponseBody
+    @PostMapping("/deleteCombination")
+    public JsonResponse deleteCombination(@RequestBody Commodity commodity){
+        UpdateWrapper<Commodity> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",commodity.getId()).set("parent", null);
+        boolean res = commodity.update(wrapper);
+        return JsonResponse.success(res);
     }
 
     /**
@@ -310,6 +358,28 @@ public class CommodityController {
             return JsonResponse.failure("读取导入文件错误");
             // throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 获取所有的组合拆分商品
+     * @param supId 店铺id，不能为空
+     * @return 返回所有的组合拆分商品，没有店铺id则没有数据
+     */
+    @ResponseBody
+    @GetMapping("/getCombinations")
+    public JsonResponse getCombinations(Integer supId){
+        return JsonResponse.success(commodityService.getCombinations(supId));
+    }
+
+    /**
+     * 根据关键字查询组合拆分商品
+     * @param commodity 必须包含supId，name作为关键字
+     * @return 返回查询到的Combination数据
+     */
+    @ResponseBody
+    @GetMapping("/searchCombinations")
+    public JsonResponse searchCombinations(Commodity commodity){
+        return JsonResponse.success(commodityService.searchCombinations(commodity));
     }
 }
 

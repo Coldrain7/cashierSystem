@@ -60,6 +60,19 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="CombinationMap" type="com.example.mybatisplus.model.domain.Combination">
+        <result column="sup_id" property="supId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="parent_barcode" property="parentBarcode"/>
+        <result column="parent_purchase_price" property="parentPurchasePrice"/>
+        <result column="child_specification" property="childSpecification"/>
+        <result column="child_id" property="childId"/>
+        <result column="child_name" property="childName"/>
+        <result column="child_barcode" property="childBarcode"/>
+        <result column="child_purchase_price" property="childPurchasePrice"/>
+        <result column="parent" property="parent"/>
+    </resultMap>
     <resultMap id="CommodityPage" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
         <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
         <association property="unit"  javaType="com.example.mybatisplus.model.domain.Unit" resultMap="UnitMap"></association>
@@ -213,6 +226,27 @@
         <if test="sortDTO.order == 'asc' or sortDTO.order == 'desc'">
             order by CONVERT(${sortDTO.prop} USING gbk) COLLATE gbk_chinese_ci ${sortDTO.order}
         </if>
+    </select>
+    <select id="selectCombinations" resultMap="CombinationMap">
+        select c1.id as parent_id, c1.sup_id as sup_id, c1.name as parent_name,
+               c1.barcode as parent_barcode, c1.purchase_price as parent_purchase_price,
+               c2.specification as child_specification, c2.id as child_id,
+               c2.name as child_name, c2.barcode as child_barcode, c2.parent as parent,
+               c2.purchase_price as child_purchase_price
+        from commodity c1 inner join commodity c2 on c1.id = c2.parent
+        where c1.is_deleted = 0 and c2.is_deleted = 0 and c1.sup_id = #{supId} and c2.sup_id = #{supId}
+    </select>
+    <select id="searchCombinations" resultMap="CombinationMap">
+        with myTable as (select c1.id as parent_id, c1.sup_id as sup_id, c1.name as parent_name,
+                                c1.barcode as parent_barcode, c1.purchase_price as parent_purchase_price,
+                                c2.specification as child_specification, c2.id as child_id,
+                                c2.name as child_name, c2.barcode as child_barcode, c2.parent as parent,
+                                c2.purchase_price as child_purchase_price
+                         from commodity c1 inner join commodity c2 on c1.id = c2.parent
+                         where c1.is_deleted = 0 and c2.is_deleted = 0 and c1.sup_id = #{commodity.supId}
+                           and c2.sup_id = #{commodity.supId})
+        select * from myTable where parent_name like '%${commodity.name}%' or parent_barcode like '%${commodity.name}%'
+                                 or child_name like '%${commodity.name}%' or child_barcode like '%${commodity.name}%'
     </select>
 
 </mapper>

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.common.utls.ExcelUtils;
+import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
 import org.apache.commons.lang3.StringUtils;
@@ -399,6 +400,21 @@ public class CommodityController {
     @GetMapping("/searchCombinations")
     public JsonResponse searchCombinations(Commodity commodity){
         return JsonResponse.success(commodityService.searchCombinations(commodity));
+    }
+
+    /**
+     * 检查商品id有没有被作为外键引用，即检查商品有没有加入组合拆分中
+     * @param commodity 商品信息，包含supId与id
+     * @return 被引用就返回true,否则false
+     */
+    @ResponseBody
+    @GetMapping("/isCombined")
+    public JsonResponse isCombined(Commodity commodity){
+        QueryWrapper<Commodity>  wrapper = new QueryWrapper<>();
+        wrapper.eq("parent", commodity.getId()).eq("sup_id", commodity.getSupId());
+        Commodity c = commodityService.getOne(wrapper);
+        boolean res = c == null? false:true;
+        return JsonResponse.success(res, "商品已加入组合拆分中");
     }
 }
 

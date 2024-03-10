@@ -13,5 +13,20 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <select id="selectMemberPage" resultType="com.example.mybatisplus.model.domain.Member">
+        select *
+        from member
+        <where>
+            sup_id = #{member.supId} and is_deleted = 0
+            <if test="member.name != null and member.name != ''">
+                and (member.name like '%${member.name}%'
+                or id like '%${member.name}%'
+                or phone like '%${member.name}%')
+            </if>
+        </where>
+        <if test="sortDTO.order == 'asc' or sortDTO.order == 'desc'">
+            order by CONVERT(${sortDTO.prop} USING gbk) COLLATE gbk_chinese_ci ${sortDTO.order}
+        </if>
+    </select>
 
 </mapper>

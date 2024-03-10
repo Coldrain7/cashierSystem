@@ -1,7 +1,11 @@
 package com.example.mybatisplus.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Member;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.mybatisplus.model.dto.SortDTO;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +15,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author harry
  * @since 2024-01-06
  */
+@Repository
 public interface MemberMapper extends BaseMapper<Member> {
 
+    Page<Member> selectMemberPage(Page<Member> page, @Param("member") Member member, @Param("sortDTO") SortDTO sortDTO);
 }

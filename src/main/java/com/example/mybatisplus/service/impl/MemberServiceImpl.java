@@ -1,9 +1,12 @@
 package com.example.mybatisplus.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Member;
 import com.example.mybatisplus.mapper.MemberMapper;
+import com.example.mybatisplus.model.dto.SortDTO;
 import com.example.mybatisplus.service.MemberService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements MemberService {
 
+    @Autowired
+    private MemberMapper memberMapper;
+    @Override
+    public Page<Member> memberPage(Page<Member> page, Member member, SortDTO sortDTO) {
+        sortDTO.isSortable();
+        return memberMapper.selectMemberPage(page, member, sortDTO);
+    }
 }

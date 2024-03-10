@@ -1,5 +1,8 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.model.dto.PageDTO;
+import com.example.mybatisplus.model.dto.SortDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -73,6 +76,13 @@ public class MemberController {
     public JsonResponse create(Member  member) throws Exception {
         memberService.save(member);
         return JsonResponse.success(null);
+    }
+    @ResponseBody
+    @GetMapping("/memberPage")
+    public JsonResponse memberPage(PageDTO pageDTO, Member member, SortDTO sortDTO){
+        Page<Member> page = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
+        memberService.memberPage(page, member, sortDTO);
+        return JsonResponse.success(page);
     }
 }
 

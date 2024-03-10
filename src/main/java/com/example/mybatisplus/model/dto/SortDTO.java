@@ -22,6 +22,8 @@ public class SortDTO {
         propSet.add("produce_date");
         propSet.add("expiration_time");
         propSet.add("create_time");
+        propSet.add("id");
+        propSet.add("point");
     }
     /**
      * 转换大写字母为下划线加小写字母
@@ -41,12 +43,11 @@ public class SortDTO {
         }
         prop = result;
     }
-
     /**
      * 转化前端传来的字段为sql查询需要的形式，并判断是否能进行排序
      * @return 能排序返回true,否则false
      */
-    public boolean isContain(){
+    public boolean isSortable(){
         convertProp();
         boolean flag = false;
         if(order == null) return false;
@@ -57,9 +58,18 @@ public class SortDTO {
             order = "desc";
             flag = propSet.contains(prop);
         }
+        return flag;
+    }
+    /**
+     * 针对商品转化前端传来的字段为sql查询需要的形式，并判断是否能进行排序
+     * @return 能排序返回true,否则false
+     */
+    public boolean isContain(){
+        boolean flag = isSortable();
         if(!prop.equals("supplier.name")) {
             prop = "commodity." + prop;
         }
         return flag;
     }
+
 }

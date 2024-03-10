@@ -4,12 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.common.utls.ExcelUtils;
-import com.example.mybatisplus.model.domain.Book;
-import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
-import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -145,7 +142,6 @@ public class CommodityController {
 
     /**
      * 包含排序的查询商品资料功能
-     *
      * @param pageDTO
      * @param commodity
      * @param sortDTO
@@ -159,8 +155,7 @@ public class CommodityController {
     }
 
     /**
-     * 根据id更新商品
-     *
+     * 根据id更新商品,对规格以及组合拆分的商品进货价进行了检验
      * @param commodity 商品实体，包含要修改的属性值和id
      * @return 修改成功返回true,否则返回false
      */
@@ -168,14 +163,38 @@ public class CommodityController {
     @GetMapping("/updateCommodity")
     public JsonResponse updateCommodity(Commodity commodity) {
         Pattern pattern = Pattern.compile("^\\d+x\\d+$");
-        if(pattern.matcher(commodity.getSpecification()).matches()){
-            System.out.println(commodity.getParent());
-            boolean result = commodityService.updateById(commodity);
-            return JsonResponse.success(result);
-        }else{
-            return JsonResponse.failure("规格形式不匹配");
+        if(StringUtils.isNotBlank(commodity.getSpecification())){
+            if(!pattern.matcher(commodity.getSpecification()).matches()){
+                return JsonResponse.failure("规格形式不匹配");
+            }
         }
-
+        Commodity c = commodityService.getById(commodity.getId());
+        if(!c.getPurchasePrice().equals(commodity.getPurchasePrice())){//进货价发生变化
+            if(c.getParent() == null){//商品可能是组合后商品或普通商品
+                QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
+                wrapper.eq("sup_id", commodity.getSupId()).eq("parent", commodity.getId());
+                Commodity separateCommodity = commodityService.getOne(wrapper);
+                if(separateCommodity != null){// 商品可拆分，还要更新拆分后的进价
+                    Double num = Double.parseDouble(separateCommodity.getSpecification().substring(2));
+                    separateCommodity.setPurchasePrice(commodity.getPurchasePrice()/num);
+                    boolean res = commodityService.updateById(separateCommodity);
+                    return JsonResponse.success(res && commodityService.updateById(commodity),"修改失败，请检查商品拆分后的进货价");
+                }else{//商品为普通商品，只用更新commodity
+                    return JsonResponse.success(commodityService.updateById(commodity), "保存失败");
+                }
+            }else{//商品为拆分后的商品，还需要更新组合后的商品进货价
+                QueryWrapper wrapper = new QueryWrapper<>();
+                wrapper.eq("id", c.getParent());
+                Commodity combinedCommodity = commodityService.getOne(wrapper);
+                Double num = Double.parseDouble(c.getSpecification().substring(2));
+                combinedCommodity.setPurchasePrice(num * commodity.getPurchasePrice());
+                boolean res = commodityService.updateById(combinedCommodity);
+                return JsonResponse.success(res && commodityService.updateById(commodity), "修改失败，请检查商品组合后的进货价");
+            }
+        }else{//进货价无变化
+            boolean result = commodityService.updateById(commodity);
+            return JsonResponse.success(result,"保存失败");
+        }
     }
 
     /**

@@ -36,6 +36,8 @@ public class Member extends Model<Member> {
 
     private Double point;
 
+    private Integer supId;
+
     @TableLogic
     private Boolean isDeleted;
 

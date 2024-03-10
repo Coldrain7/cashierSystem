@@ -8,6 +8,7 @@
         <result column="name" property="name" />
         <result column="phone" property="phone" />
         <result column="point" property="point" />
+        <result column="sup_id" property="supId"/>
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

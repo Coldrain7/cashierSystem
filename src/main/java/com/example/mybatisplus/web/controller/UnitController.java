@@ -1,6 +1,8 @@
 package com.example.mybatisplus.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -78,6 +80,12 @@ public class UnitController {
     @ResponseBody
     public JsonResponse create(@RequestBody Unit  unit) {
         QueryWrapper<Unit> wrapper = new QueryWrapper<>();
+        if(StringUtils.isBlank(unit.getUnit())){
+            return JsonResponse.success(false, "创建失败：单位名称为空");
+        }
+        if(unit.getSupId() == null){
+            return JsonResponse.success(false, "创建失败");
+        }
         wrapper.eq("sup_id", unit.getSupId()).eq("unit", unit.getUnit());
         Unit u = unitService.getOne(wrapper);
         boolean result = false;

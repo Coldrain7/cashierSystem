@@ -5,6 +5,8 @@ import com.example.mybatisplus.model.domain.Member;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.SortDTO;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * <p>
  * 会员 服务类
@@ -16,4 +18,8 @@ import com.example.mybatisplus.model.dto.SortDTO;
 public interface MemberService extends IService<Member> {
 
     Page<Member> memberPage(Page<Member> page, Member member, SortDTO sortDTO);
+
+    int inesrt(Member member);
+
+    void exportMembers(HttpServletResponse httpServletResponse, Member member);
 }

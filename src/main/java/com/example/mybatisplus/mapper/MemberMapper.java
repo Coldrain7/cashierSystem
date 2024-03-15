@@ -7,6 +7,8 @@ import com.example.mybatisplus.model.dto.SortDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  * 会员 Mapper 接口
@@ -19,4 +21,5 @@ import org.springframework.stereotype.Repository;
 public interface MemberMapper extends BaseMapper<Member> {
 
     Page<Member> selectMemberPage(Page<Member> page, @Param("member") Member member, @Param("sortDTO") SortDTO sortDTO);
+    List<Member> selectMemberPage(@Param("member") Member member,@Param("sortDTO") SortDTO sortDTO);
 }

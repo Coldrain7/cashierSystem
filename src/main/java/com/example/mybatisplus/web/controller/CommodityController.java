@@ -416,5 +416,26 @@ public class CommodityController {
         boolean res = c == null? false:true;
         return JsonResponse.success(res, "商品已加入组合拆分中");
     }
+
+    /**
+     * 查询预警信息
+     * @param map supId不能为空
+     * @return 没有supId返回错误信息，有则返回查询到的数据
+     */
+    @ResponseBody
+    @PostMapping("/searchWarning")
+    public JsonResponse searchWarning(@RequestBody Map<String, Integer>map){
+        if(map.get("supId") == null){
+            return JsonResponse.failure("缺少店铺id信息");
+        }
+        Integer supId = map.get("supId");
+        Integer supplierId = map.get("supplierId");
+        Integer claId = map.get("claId");
+        Integer num = map.get("num");
+        Integer funcId = map.get("funcId");
+        Page<Commodity>page = new Page<>(map.get("pageNo"), map.get("pageSize"));
+        page = commodityService.searchWarning(page, supId, claId, supplierId, funcId, num);
+        return JsonResponse.success(page);
+    }
 }
 

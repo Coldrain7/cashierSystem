@@ -314,4 +314,9 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     public List<Combination> searchCombinations(Commodity commodity) {
         return commodityMapper.searchCombinations(commodity);
     }
+
+    @Override
+    public Page<Commodity> searchWarning(Page<Commodity> page, Integer supId, Integer claId, Integer supplierId,Integer funcId, Integer num) {
+        return commodityMapper.searchWarning(page, supId, claId, supplierId, funcId, num);
+    }
 }

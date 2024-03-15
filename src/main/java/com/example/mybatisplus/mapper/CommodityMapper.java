@@ -69,4 +69,7 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     List<Combination> selectCombinations(@Param("supId") Integer supId);
 
     List<Combination> searchCombinations(@Param("commodity") Commodity commodity);
+
+    Page<Commodity> searchWarning(Page<Commodity> page, @Param("supId") Integer supId, @Param("claId") Integer claId,
+                                  @Param("supplierId") Integer supplierId,@Param("funcId")Integer funcId, @Param("num") Integer num);
 }

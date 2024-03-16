@@ -170,7 +170,7 @@ public class CommodityController {
             }
         }
         Commodity c = commodityService.getById(commodity.getId());
-        if(!c.getPurchasePrice().equals(commodity.getPurchasePrice())){//进货价发生变化
+        if(commodity.getPurchasePrice()!=null&&!c.getPurchasePrice().equals(commodity.getPurchasePrice())){//进货价发生变化
             if(c.getParent() == null){//商品可能是组合后商品或普通商品
                 QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
                 wrapper.eq("sup_id", commodity.getSupId()).eq("parent", commodity.getId());

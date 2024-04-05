@@ -41,16 +41,7 @@ class MybatisplusApplicationTests {
         System.out.println(""==null);
     }
 
-    @Test
-    public void barcodeTest(){
-        List<Multibarcode> multibarcodeList = new ArrayList<>();
-        Multibarcode multibarcode = new Multibarcode();
-        multibarcode.setComId(46L);
-        multibarcode.setBarcode("12345678");
-        multibarcodeList.add(multibarcode);
-        JsonResponse jsonResponse = multibarcodeController.addBarcodes(multibarcodeList);
-        System.out.println(jsonResponse.getMessage());
-    }
+
 
 
 

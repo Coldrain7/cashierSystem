@@ -38,6 +38,10 @@ public class Supplier extends Model<Supplier> {
 
     private Integer number;
 
+    private String linkman;
+
+    private Long phone;
+
     @TableLogic
     private Boolean isDeleted;
 

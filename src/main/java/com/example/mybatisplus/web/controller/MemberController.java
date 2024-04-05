@@ -76,7 +76,7 @@ public class MemberController {
             member.setPoint(0.0);
         }
         if(member.getSupId() == null || member.getSupId() < 0){
-            return JsonResponse.failure("店铺id信息错误 ");
+            return JsonResponse.failure("店铺id信息错误");
         }
         boolean res = memberService.updateById(member);
         if(res){

@@ -45,7 +45,7 @@ public class Commodity extends Model<Commodity> {
     private Double inventory;
 
     private Integer unitId;
-
+ 
     private Double purchasePrice;
 
     private Double price;
@@ -72,6 +72,7 @@ public class Commodity extends Model<Commodity> {
 
     @TableLogic
     private Boolean isDeleted;
+
     @TableField(exist = false)
     private Classification classification;
     @TableField(exist = false)

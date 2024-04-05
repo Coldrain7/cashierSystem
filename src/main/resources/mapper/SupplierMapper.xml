@@ -9,6 +9,8 @@
         <result column="name" property="name" />
         <result column="number" property="number" />
         <result column="is_deleted" property="isDeleted" />
+        <result column="linkman" property="linkman"/>
+        <result column="phone" property="phone"/>
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
@@ -20,6 +22,15 @@
         select name, id
         from supplier
         where is_deleted = 0 and sup_id = #{supId}
+    </select>
+    <select id="getSuppliers" resultType="com.example.mybatisplus.model.domain.Supplier">
+        select id, name, number, phone, linkman, sup_id
+        from supplier
+        where is_deleted = 0 and sup_id = #{supplier.supId}
+        and (name like '%${supplier.name}%' or number like '%${supplier.name}%')
+        <if test="sortDTO.order == 'asc' or sortDTO.order == 'desc'">
+            order by CONVERT(${sortDTO.prop} USING gbk) COLLATE gbk_chinese_ci ${sortDTO.order}
+        </if>
     </select>
 
 </mapper>

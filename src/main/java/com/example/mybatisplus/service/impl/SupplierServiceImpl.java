@@ -3,6 +3,7 @@ package com.example.mybatisplus.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mybatisplus.model.domain.Supplier;
 import com.example.mybatisplus.mapper.SupplierMapper;
+import com.example.mybatisplus.model.dto.SortDTO;
 import com.example.mybatisplus.service.SupplierService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,19 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
         }else{
             return null;
         }
+    }
+
+    @Override
+    public List<Supplier> getSuppliers(Supplier supplier, SortDTO sortDTO) {
+        if(supplier.getSupId() != null){
+            sortDTO.isSortable();
+            return supplierMapper.getSuppliers(supplier, sortDTO);
+        }else return null;
+    }
+
+    @Override
+    public int insert(Supplier supplier) {
+        supplierMapper.insert(supplier);
+        return supplier.getId();
     }
 }

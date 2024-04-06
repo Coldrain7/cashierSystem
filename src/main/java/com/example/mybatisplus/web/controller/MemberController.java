@@ -134,6 +134,7 @@ public class MemberController {
         memberService.memberPage(page, member, sortDTO);
         return JsonResponse.success(page);
     }
+
     @ResponseBody
     @PostMapping("/exportMembers")
     public void exportMembers(HttpServletResponse httpServletResponse, @RequestBody Member member){

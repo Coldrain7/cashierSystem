@@ -1,10 +1,7 @@
 package com.example.mybatisplus.common.utls;
 
 
-import com.example.mybatisplus.model.domain.Book;
-import com.example.mybatisplus.model.domain.Commodity;
-import com.example.mybatisplus.model.domain.Member;
-import com.example.mybatisplus.model.domain.Multibarcode;
+import com.example.mybatisplus.model.domain.*;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
@@ -816,6 +813,157 @@ public class ExcelUtils {
 
             cell = row.createCell((short) 4);
             cell.setCellValue(members.get(i).getCreateTime().toString().replace('T', ' '));
+            cell.setCellStyle(commStyle);
+
+        }
+        hwb.write(httpServletResponse.getOutputStream());
+        hwb.close();
+    }
+
+    public static void exportSuppliers(HttpServletResponse httpServletResponse, List<Supplier> suppliers) throws IOException {
+        //声明一个表格对象
+        HSSFWorkbook hwb = new HSSFWorkbook();
+        //声明一个sheet并命名
+        HSSFSheet sheet = hwb.createSheet("供应商信息");
+        //给sheet名称一个长度
+        sheet.setDefaultColumnWidth((short) 10);
+        //名称
+        sheet.setColumnWidth(0, 20 * 256);
+        //编号
+        sheet.setColumnWidth(1, 20 * 256);
+        //联系人
+        sheet.setColumnWidth(2, 20 * 256);
+        //电话
+        sheet.setColumnWidth(3, 20 * 256);
+        //创建时间
+        sheet.setColumnWidth(4, 20 * 256);
+        // 设置单元格格式为文本格式
+        HSSFCellStyle textStyle = hwb.createCellStyle();
+        HSSFDataFormat format = hwb.createDataFormat();
+        textStyle.setDataFormat(format.getFormat("@"));
+        //设置单元格格式为"文本"
+        sheet.setDefaultColumnStyle(6, textStyle);
+
+        //设置下拉框
+        // DataValidationHelper helper = sheet.getDataValidationHelper();
+
+        //生成表头样式
+        HSSFCellStyle headStyle = hwb.createCellStyle();
+        headStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headStyle.setBorderBottom(BorderStyle.THIN);
+        headStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderLeft(BorderStyle.THIN);
+        headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderRight(BorderStyle.THIN);
+        headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderTop(BorderStyle.THIN);
+        headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setAlignment(HorizontalAlignment.CENTER);
+        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 生成一个字体
+        HSSFFont headFont = hwb.createFont();
+        headFont.setFontName("宋体");
+        headFont.setFontHeightInPoints((short) 16);
+        headFont.setBold(true);
+        // 把字体应用到当前的样式
+        headStyle.setFont(headFont);
+
+        //公用样式
+        HSSFCellStyle style = hwb.createCellStyle();
+        style.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setWrapText(true);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 生成一个字体
+        HSSFFont font = hwb.createFont();
+        font.setFontName("Book Antiqua");
+        font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
+        // 把字体应用到当前的样式
+        style.setFont(font);
+
+        //表格内部样式
+        HSSFCellStyle commStyle = hwb.createCellStyle();
+        commStyle.setBorderBottom(BorderStyle.THIN);
+        commStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderLeft(BorderStyle.THIN);
+        commStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderRight(BorderStyle.THIN);
+        commStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setBorderTop(BorderStyle.THIN);
+        commStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        commStyle.setAlignment(HorizontalAlignment.CENTER);
+        commStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        HSSFFont font1 = hwb.createFont();
+        font1.setFontName("Book Antiqua");
+        font1.setFontHeightInPoints((short) 10);
+        commStyle.setFont(font1);
+        //创建表标题
+        HSSFRow headerRow = sheet.createRow(0);
+        //样式字体居中
+        headerRow.setHeightInPoints(20);
+        headerRow.setHeight((short) (34.40 * 20));
+        HSSFCell cell0 = headerRow.createCell(0);
+        HSSFCell cell7 = headerRow.createCell(14);
+        cell0.setCellValue("供应商资料");
+        cell0.setCellStyle(headStyle);
+        cell7.setCellStyle(headStyle);
+        CellRangeAddress cellAddresses = new CellRangeAddress(0, 0, 0, 4);
+        sheet.addMergedRegion(cellAddresses);
+
+        //创建表头
+        HSSFRow row = sheet.createRow(1);
+        row.setHeight((short) (20.40 * 20));
+        //给表头第一行一次创建单元格
+        HSSFCell cell = row.createCell((short) 0);
+        cell.setCellValue("供应商名称");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 1);
+        cell.setCellValue("编号");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 2);
+        cell.setCellValue("联系人");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 3);
+        cell.setCellValue("电话");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 4);
+        cell.setCellValue("创建时间");
+        cell.setCellStyle(style);
+
+        for (short i = 0; i < suppliers.size(); i++) {
+            System.out.println(suppliers.get(i));
+            row = sheet.createRow(i + 2);
+            row.setHeight((short) (20.40 * 20));
+            cell = row.createCell((short) 0);
+            cell.setCellStyle(commStyle);
+            cell.setCellValue(suppliers.get(i).getName());
+
+            cell = row.createCell((short) 1);
+            cell.setCellValue(suppliers.get(i).getNumber());
+            cell.setCellStyle(commStyle);
+
+            cell = row.createCell((short) 2);
+            cell.setCellValue(suppliers.get(i).getLinkman() == null?"":suppliers.get(i).getLinkman());
+            cell.setCellStyle(commStyle);
+
+            cell = row.createCell((short) 3);
+            cell.setCellValue(suppliers.get(i).getPhone() == null? "":suppliers.get(i).getPhone().toString());
+            cell.setCellStyle(commStyle);
+
+            cell = row.createCell((short) 4);
+            cell.setCellValue(suppliers.get(i).getCreateTime().toString().replace('T', ' '));
             cell.setCellStyle(commStyle);
 
         }

@@ -1,6 +1,7 @@
 package com.example.mybatisplus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.mybatisplus.common.utls.ExcelUtils;
 import com.example.mybatisplus.model.domain.Supplier;
 import com.example.mybatisplus.mapper.SupplierMapper;
 import com.example.mybatisplus.model.dto.SortDTO;
@@ -9,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,5 +50,16 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     public int insert(Supplier supplier) {
         supplierMapper.insert(supplier);
         return supplier.getId();
+    }
+
+    @Override
+    public void exportSuppliers(HttpServletResponse httpServletResponse, Supplier supplier) {
+        SortDTO sortDTO = new SortDTO();
+        List<Supplier> list = supplierMapper.getSuppliers(supplier, sortDTO);
+        try {
+            ExcelUtils.exportSuppliers(httpServletResponse, list);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

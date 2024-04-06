@@ -11,6 +11,7 @@ import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.service.SupplierService;
 import com.example.mybatisplus.model.domain.Supplier;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +47,14 @@ public class SupplierController {
     }
 
     /**
-    * 描述：根据Id删除
-    *
-    */
+     * 根据id删除供应商
+     * @param id 供应商id
+     * @return 删除成功返回true,否则返回false
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        supplierService.removeById(id);
-        return JsonResponse.success(null);
+    public JsonResponse deleteById(@PathVariable("id") Long id){
+        return JsonResponse.success(supplierService.removeById(id));
     }
 
     /**
@@ -125,5 +126,10 @@ public class SupplierController {
         return JsonResponse.success(supplierService.getSuppliers(supplier, sortDTO));
     }
 
+    @ResponseBody
+    @PostMapping("/exportSuppliers")
+    public void exportSuppliers(HttpServletResponse httpServletResponse,@RequestBody Supplier supplier){
+        supplierService.exportSuppliers(httpServletResponse, supplier);
+    }
 }
 

@@ -24,7 +24,7 @@
         where is_deleted = 0 and sup_id = #{supId}
     </select>
     <select id="getSuppliers" resultType="com.example.mybatisplus.model.domain.Supplier">
-        select id, name, number, phone, linkman, sup_id
+        select id, name, number, phone, linkman, sup_id, create_time
         from supplier
         where is_deleted = 0 and sup_id = #{supplier.supId}
         and (name like '%${supplier.name}%' or number like '%${supplier.name}%')

@@ -4,6 +4,7 @@ import com.example.mybatisplus.model.domain.Supplier;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.SortDTO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -21,4 +22,6 @@ public interface SupplierService extends IService<Supplier> {
     List<Supplier> getSuppliers(Supplier supplier, SortDTO sortDTO);
 
     int insert(Supplier supplier);
+
+    void exportSuppliers(HttpServletResponse httpServletResponse, Supplier supplier);
 }

@@ -305,6 +305,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         List<Commodity> commodities = commodityMapper.selectList(wrapper);
         if(commodities.size() > 1){
             throw new RuntimeException("查询到的商品过多，请输入更长的条码位数");
+        }else if(commodities.isEmpty()){
+            throw new RuntimeException("没有符合条件的商品");
         }else{
             return commodities.get(0);
         }
@@ -318,5 +320,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public Page<Commodity> searchWarning(Page<Commodity> page, Integer supId, Integer claId, Integer supplierId,Integer funcId, Integer num) {
         return commodityMapper.searchWarning(page, supId, claId, supplierId, funcId, num);
+    }
+
+    @Override
+    public List<Commodity> getCommodities(Commodity commodity) {
+        return commodityMapper.selectCommodities(commodity);
     }
 }

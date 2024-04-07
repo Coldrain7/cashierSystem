@@ -59,4 +59,6 @@ public interface CommodityService extends IService<Commodity> {
     List<Combination> searchCombinations(Commodity commodity);
 
     Page<Commodity> searchWarning(Page<Commodity> page,Integer supId, Integer claId, Integer supplierId,Integer funcId, Integer num);
+
+    List<Commodity> getCommodities(Commodity commodity);
 }

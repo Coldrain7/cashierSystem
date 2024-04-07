@@ -281,5 +281,14 @@
         </where>
 
     </select>
+    <select id="selectCommodities" resultMap="UniqueBarcode">
+        select commodity.barcode, commodity.name, commodity.price,
+               multibarcode.barcode as m_barcode
+        from commodity left outer join multibarcode
+        on commodity.id = multibarcode.com_id and commodity.is_deleted = 0 and multibarcode.is_deleted = 0
+        where (commodity.barcode like '%${commodity.barcode}' or commodity.name like '%${commodity.barcode}%'
+                   or multibarcode.barcode = '%${commodity.barcode}')
+        and sup_id = #{commodity.supId}
+    </select>
 
 </mapper>

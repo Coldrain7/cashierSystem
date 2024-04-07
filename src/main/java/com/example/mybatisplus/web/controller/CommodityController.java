@@ -82,6 +82,18 @@ public class CommodityController {
     }
 
     /**
+     * 根据关键字查询商品,会联合多码表
+     * @param commodity 前端需要将关键字存储在barcode字段，supId不能为空
+     * @return 有数据就返回List<Commodity>，否则返回null
+     */
+    @ResponseBody
+    @GetMapping("/getCommoditiesByKeyword")
+    public JsonResponse getCommoditiesByKeyword(Commodity commodity){
+        if(commodity.getSupId() == null || commodity.getBarcode() == null)return JsonResponse.success(null);
+        return JsonResponse.success(commodityService.getCommodities(commodity));
+    }
+
+    /**
      * 描述：根据Id删除
      *
      * @param id

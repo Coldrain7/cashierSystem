@@ -89,8 +89,12 @@ public class CommodityController {
     @ResponseBody
     @GetMapping("/getCommoditiesByKeyword")
     public JsonResponse getCommoditiesByKeyword(Commodity commodity){
-        if(commodity.getSupId() == null || commodity.getBarcode() == null)return JsonResponse.success(null);
-        return JsonResponse.success(commodityService.getCommodities(commodity));
+        if(commodity.getSupId() == null || commodity.getBarcode() == null)return JsonResponse.failure("没有关键词信息");
+        List<Commodity> commodities = commodityService.getCommodities(commodity);
+        if(commodities.size() > 50){
+            return JsonResponse.failure("查询到的数据过多");
+        }
+        return JsonResponse.success(commodities);
     }
 
     /**

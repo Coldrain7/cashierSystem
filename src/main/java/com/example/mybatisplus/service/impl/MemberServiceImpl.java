@@ -1,5 +1,6 @@
 package com.example.mybatisplus.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.common.utls.ExcelUtils;
 import com.example.mybatisplus.model.domain.Member;
@@ -48,5 +49,13 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Member> getMembers(Member member) {
+        QueryWrapper<Member> wrapper = new QueryWrapper<>();
+        wrapper.eq("sup_id", member.getSupId()).
+                like("id", member.getPhone()).or().like("phone", member.getPhone());
+        return memberMapper.selectList(wrapper);
     }
 }

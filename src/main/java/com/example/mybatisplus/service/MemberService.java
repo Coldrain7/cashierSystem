@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.SortDTO;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -22,4 +23,6 @@ public interface MemberService extends IService<Member> {
     int inesrt(Member member);
 
     void exportMembers(HttpServletResponse httpServletResponse, Member member);
+
+    List<Member> getMembers(Member member);
 }

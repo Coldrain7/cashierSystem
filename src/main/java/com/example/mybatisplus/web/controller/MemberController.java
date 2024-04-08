@@ -140,5 +140,18 @@ public class MemberController {
     public void exportMembers(HttpServletResponse httpServletResponse, @RequestBody Member member){
         memberService.exportMembers(httpServletResponse, member);
     }
+
+    /**
+     * 根据电话号码或者id查询会员信息，可有多条信息
+     * @param member 必须包含supId和phone信息
+     * @return 查询到信息则返回，否则返回null
+     */
+    @ResponseBody
+    @GetMapping("/getMembers")
+    public JsonResponse getMembers(Member member){
+        if(member.getSupId() == null || member.getPhone() == null) return JsonResponse.success(null);
+        return JsonResponse.success(memberService.getMembers(member));
+    }
+
 }
 

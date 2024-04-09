@@ -282,7 +282,7 @@
 
     </select>
     <select id="selectCommodities" resultMap="UniqueBarcode">
-        select commodity.barcode, commodity.name, commodity.price,
+        select commodity.barcode, commodity.name, commodity.price, commodity.id,
                multibarcode.barcode as m_barcode
         from commodity left outer join multibarcode
         on commodity.id = multibarcode.com_id and commodity.is_deleted = 0 and multibarcode.is_deleted = 0

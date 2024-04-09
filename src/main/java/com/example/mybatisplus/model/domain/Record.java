@@ -1,5 +1,6 @@
 package com.example.mybatisplus.model.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -27,21 +28,23 @@ public class Record extends Model<Record> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
+    //数据库中id与com_id一起共同作为主键
     private Long id;
 
     private Integer memId;
 
-    private Integer comId;
+    private Long comId;
 
     private Integer workerId;
-
+    //数量
     private Double number;
-
+    //总价钱
     private Double payment;
-
+    //支付方式
     private Integer method;
-
+    //类型，比如是否是挂单
+    private Integer type;
     @TableLogic
     private Boolean isDeleted;
 

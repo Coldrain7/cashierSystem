@@ -2,6 +2,9 @@ package com.example.mybatisplus.mapper;
 
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RecordMapper extends BaseMapper<Record> {
 
+    boolean insertRecords(@Param("records") List<Record> records);
 }

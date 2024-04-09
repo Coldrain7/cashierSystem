@@ -11,9 +11,18 @@
         <result column="number" property="number" />
         <result column="payment" property="payment" />
         <result column="method" property="method" />
+        <result column="type" property="type"/>
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <insert id="insertRecords">
+        INSERT INTO record (worker_id, mem_id, com_id, number, paymemnt, method, type)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.workerId}, #{item.memId}, #{item.comId}, #{item.number},
+             #{item.paymemnt}, #{item.method}, #{item.type})
+        </foreach>
+    </insert>
 
 </mapper>

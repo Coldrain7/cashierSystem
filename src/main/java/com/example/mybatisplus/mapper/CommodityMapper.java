@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.mybatisplus.model.domain.Record;
 import com.example.mybatisplus.model.dto.PageDTO;
 import com.example.mybatisplus.model.dto.SortDTO;
 import org.apache.ibatis.annotations.Param;
@@ -74,4 +75,6 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
                                   @Param("supplierId") Integer supplierId,@Param("funcId")Integer funcId, @Param("num") Integer num);
 
     List<Commodity> selectCommodities(@Param("commodity")Commodity commodity);
+
+    boolean updateInventory(@Param("record") Record record);
 }

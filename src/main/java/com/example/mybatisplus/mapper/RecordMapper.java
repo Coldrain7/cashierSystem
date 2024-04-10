@@ -1,5 +1,6 @@
 package com.example.mybatisplus.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,4 +18,14 @@ import java.util.List;
 public interface RecordMapper extends BaseMapper<Record> {
 
     boolean insertRecords(@Param("records") List<Record> records);
+
+    /**
+     * 使用Record类原有的payment字段来存储总价钱，查询的信息还包括member表的name字段
+     * @param page 分页器
+     * @param record 需要包含workerId
+     * @return 查询到的单据信息
+     */
+    Page<Record> selectRecordsWithMember(Page<Record> page, @Param("record")Record record);
+
+    List<Record> selectRecordWithCommodity(@Param("record")Record record);
 }

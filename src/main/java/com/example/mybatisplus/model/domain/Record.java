@@ -1,6 +1,7 @@
 package com.example.mybatisplus.model.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -28,7 +29,7 @@ public class Record extends Model<Record> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     //数据库中id与com_id一起共同作为主键
     private Long id;
 
@@ -52,7 +53,10 @@ public class Record extends Model<Record> {
 
     private LocalDateTime updateTime;
 
-
+    @TableField(exist = false)
+    private Member member;
+    @TableField(exist = false)
+    private Commodity commodity;
     @Override
     protected Serializable pkVal() {
         return this.id;

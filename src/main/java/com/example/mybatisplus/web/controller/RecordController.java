@@ -1,10 +1,11 @@
 package com.example.mybatisplus.web.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.example.mybatisplus.model.domain.Commodity;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.dto.CommodityDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.mybatisplus.model.dto.PageDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
@@ -83,6 +84,12 @@ public class RecordController {
         recordService.save(record);
         return JsonResponse.success(null);
     }
+
+    /**
+     * 售出商品时调用的api，会更新commodity表的库存并在record表插入数据
+     * @param map 前端包装好的信息
+     * @return data返回true如果对数据库操作成功，否则返回false
+     */
     @ResponseBody
     @PostMapping("/sellCommodities")
     public JsonResponse sellCommodities(@RequestBody Map<String, Object> map){
@@ -91,6 +98,8 @@ public class RecordController {
         List<?> dataList = (List<?>) map.get("data");
         List<CommodityDTO> commodityDTOList = new ArrayList<>();
         Record record = new Record();
+        Long id = IdWorker.getId(record);//生成一个雪花算法的id
+        record.setId(id);
         record.setMethod(Integer.parseInt(map.get("method").toString()));
         record.setWorkerId(Integer.parseInt(map.get("workerId").toString()));
         if(StringUtils.isNotBlank(map.get("memId").toString())){
@@ -113,14 +122,41 @@ public class RecordController {
         }
         // 已用rowSize确保commodityDTOList有效，不需要再在循环内判断数据是否为空
         for (CommodityDTO commodityDTO : commodityDTOList) {
-            record.setComId(commodityDTO.getId());
-            record.setPayment(commodityDTO.getSum());
-            record.setNumber(commodityDTO.getNum());
-            records.add(record);
+            Record r = new Record();
+            r.setId(record.getId());
+            r.setMethod(record.getMethod());
+            r.setWorkerId(record.getWorkerId());
+            r.setMemId(record.getMemId());
+            r.setType(record.getType());
+            r.setComId(commodityDTO.getId());
+            r.setPayment(commodityDTO.getSum());
+            r.setNumber(commodityDTO.getNum());
+            records.add(r);
         }
-        System.out.println(records);
-        return JsonResponse.success(null);
-        //return JsonResponse.success(recordService.insertRecords(records));
+        return JsonResponse.success(recordService.sellCommodities(records));
+    }
+
+    /**
+     * 收银员销售单据页面查询单据信息
+     * @param pageDTO 分页信息
+     * @param record 必须包含workerId
+     * @return 没有workerId返回data返回null,否则返回查询到的数据
+     */
+    @ResponseBody
+    @GetMapping("/getRecordsWithMember")
+    public JsonResponse getRecordsWithMember(PageDTO pageDTO, Record record){
+        if(record.getWorkerId() == null) return JsonResponse.success(null);
+        Page<Record> page = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
+        return JsonResponse.success(recordService.getRecords(page, record));
+    }
+    @ResponseBody
+    @GetMapping("/getRecordWithCommodity")
+    public JsonResponse getRecordWihCommodity(Record record){
+        if(record.getId() == null){
+            return JsonResponse.success(null);
+        }else{
+            return JsonResponse.success(recordService.getRecordWithCommodity(record));
+        }
     }
 }
 

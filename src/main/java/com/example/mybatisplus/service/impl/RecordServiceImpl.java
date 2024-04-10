@@ -1,5 +1,7 @@
 package com.example.mybatisplus.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mybatisplus.mapper.CommodityMapper;
 import com.example.mybatisplus.model.domain.Record;
 import com.example.mybatisplus.mapper.RecordMapper;
 import com.example.mybatisplus.service.RecordService;
@@ -22,10 +24,39 @@ import java.util.List;
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements RecordService {
     @Autowired
     private RecordMapper recordMapper;
+    @Autowired
+    private CommodityMapper commodityMapper;
 
     @Override
     @Transactional
     public boolean insertRecords(List<Record> records) {
         return recordMapper.insertRecords(records);
     }
+
+    @Override
+    @Transactional
+    public boolean sellCommodities(List<Record> records) {
+        try {
+            for(Record record: records){
+                commodityMapper.updateInventory(record);
+            }
+            return recordMapper.insertRecords(records);
+        }catch (RuntimeException e){
+            //e.printStackTrace();
+            System.out.println("sql查询错误");
+            return false;
+        }
+    }
+
+    @Override
+    public Page<Record> getRecords(Page<Record> page, Record record) {
+        return recordMapper.selectRecordsWithMember(page, record);
+    }
+
+    @Override
+    public List<Record> getRecordWithCommodity(Record record) {
+        return recordMapper.selectRecordWithCommodity(record);
+    }
+
+
 }

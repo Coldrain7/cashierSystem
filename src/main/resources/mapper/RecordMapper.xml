@@ -16,13 +16,68 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <resultMap id="MemberMap" type="com.example.mybatisplus.model.domain.Member">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="point" property="point" />
+        <result column="sup_id" property="supId"/>
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="CommodityMap" type="com.example.mybatisplus.model.domain.Commodity">
+        <id column="id" property="id" />
+        <result column="sup_id" property="supId" />
+        <result column="name" property="name" />
+        <result column="barcode" property="barcode" />
+        <result column="cla_id" property="claId" />
+        <result column="inventory" property="inventory" />
+        <result column="unit_id" property="unitId" />
+        <result column="purchase_price" property="purchasePrice" />
+        <result column="price" property="price" />
+        <result column="wholesale_price" property="wholesalePrice"/>
+        <result column="is_discount" property="isDiscount" />
+        <result column="is_multibarcode" property="isMultibarcode" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="produce_date" property="produceDate" />
+        <result column="expiration_time" property="expirationTime" />
+        <result column="specification" property="specification" />
+        <result column="parent" property="parent" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+    <resultMap id="RecordWithMember" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
+        <association property="member"  javaType="com.example.mybatisplus.model.domain.Member" resultMap="MemberMap"></association>
+    </resultMap>
+    <resultMap id="RecordWithCommodity" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
+        <association property="commodity"  javaType="com.example.mybatisplus.model.domain.Commodity" resultMap="CommodityMap"></association>
+    </resultMap>
     <insert id="insertRecords">
-        INSERT INTO record (worker_id, mem_id, com_id, number, paymemnt, method, type)
+        INSERT INTO record (id, worker_id, mem_id, com_id, number, payment, method, type)
         VALUES
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.workerId}, #{item.memId}, #{item.comId}, #{item.number},
-             #{item.paymemnt}, #{item.method}, #{item.type})
+        <foreach collection="records" item="item" index="index" separator=",">
+            (#{item.id}, #{item.workerId}, #{item.memId}, #{item.comId}, #{item.number},
+             #{item.payment}, #{item.method}, #{item.type})
         </foreach>
     </insert>
+    <select id="selectRecordsWithMember" resultMap="RecordWithMember">
+        with recordTable as(
+            select id, sum(payment) as payment, min(mem_id) as mem_id, min(type) as type, min(is_deleted) as is_deleted,
+                   min(method) as method, min(create_time) as create_time, min(worker_id) as worker_id
+            from record
+            group by record.id
+            having type = 0 and is_deleted = 0 and worker_id = #{record.workerId})
+        select member.name, recordTable.*
+        from recordTable left outer join member on recordTable.mem_id = member.id and member.is_deleted = 0
+        order by create_time desc
+    </select>
+    <select id="selectRecordWithCommodity" resultMap="RecordWithCommodity">
+        select commodity.barcode, commodity.name, commodity.price,
+        record.number, record.payment
+        from record left outer join commodity on record.com_id = commodity.id and commodity.is_deleted = 0
+        where record.id = #{record.id} and record.is_deleted = 0 and record.type = 0
+    </select>
 
 </mapper>

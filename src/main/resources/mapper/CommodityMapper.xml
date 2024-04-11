@@ -93,7 +93,14 @@
     </resultMap>
     <update id="updateInventory">
         UPDATE commodity
-        SET inventory = (inventory - #{record.number})
+        <choose>
+            <when test="record.type == 0">
+                SET inventory = (inventory - #{record.number})
+            </when>
+            <when test="record.type == 1">
+                SET inventory = (inventory + #{record.number})
+            </when>
+        </choose>
         WHERE id = #{record.comId}
     </update>
     <select id="selectCommodityPage" resultMap="CommodityPage">

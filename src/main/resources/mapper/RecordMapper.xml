@@ -17,7 +17,7 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
     <resultMap id="MemberMap" type="com.example.mybatisplus.model.domain.Member">
-        <id column="id" property="id" />
+        <id column="m_id" property="id" />
         <result column="name" property="name" />
         <result column="phone" property="phone" />
         <result column="point" property="point" />
@@ -68,7 +68,7 @@
                    min(method) as method, min(create_time) as create_time, min(worker_id) as worker_id
             from record
             group by record.id
-            having type = 0 and is_deleted = 0 and worker_id = #{record.workerId})
+            having type = #{record.type} and is_deleted = 0 and worker_id = #{record.workerId})
         select member.name, recordTable.*
         from recordTable left outer join member on recordTable.mem_id = member.id and member.is_deleted = 0
         order by create_time desc
@@ -77,7 +77,14 @@
         select commodity.barcode, commodity.name, commodity.price,
         record.number, record.payment
         from record left outer join commodity on record.com_id = commodity.id and commodity.is_deleted = 0
-        where record.id = #{record.id} and record.is_deleted = 0 and record.type = 0
+        where record.id = #{record.id} and record.is_deleted = 0 and record.type = #{record.type}
+    </select>
+    <select id="selectPendedRecords" resultType="com.example.mybatisplus.model.domain.Record">
+        select record.id, sum(payment) as payment, min(record.create_time) as create_time,min(record.type) as type,
+               min(record.is_deleted) as is_deleted, min(worker.sup_id) as sup_id, sum(number) as number
+        from record left outer join  worker on record.worker_id = worker.id and worker.is_deleted = 0
+        group by record.id
+        having type = 2 and is_deleted = 0 and sup_id = #{supId}
     </select>
 
 </mapper>

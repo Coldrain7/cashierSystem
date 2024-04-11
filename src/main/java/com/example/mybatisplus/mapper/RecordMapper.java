@@ -28,4 +28,6 @@ public interface RecordMapper extends BaseMapper<Record> {
     Page<Record> selectRecordsWithMember(Page<Record> page, @Param("record")Record record);
 
     List<Record> selectRecordWithCommodity(@Param("record")Record record);
+
+    List<Record> selectPendedRecords(@Param("supId") Integer supId);
 }

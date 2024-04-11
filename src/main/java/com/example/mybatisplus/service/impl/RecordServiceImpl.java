@@ -35,10 +35,12 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     @Transactional
-    public boolean sellCommodities(List<Record> records) {
+    public boolean createRecords(List<Record> records) {
         try {
-            for(Record record: records){
-                commodityMapper.updateInventory(record);
+            if(records.get(0).getType() != 2){
+                for(Record record: records){
+                    commodityMapper.updateInventory(record);
+                }
             }
             return recordMapper.insertRecords(records);
         }catch (RuntimeException e){
@@ -56,6 +58,11 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     @Override
     public List<Record> getRecordWithCommodity(Record record) {
         return recordMapper.selectRecordWithCommodity(record);
+    }
+
+    @Override
+    public List<Record> getPendedRecords(Integer supId) {
+        return recordMapper.selectPendedRecords(supId);
     }
 
 

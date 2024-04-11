@@ -91,8 +91,8 @@ public class RecordController {
      * @return data返回true如果对数据库操作成功，否则返回false
      */
     @ResponseBody
-    @PostMapping("/sellCommodities")
-    public JsonResponse sellCommodities(@RequestBody Map<String, Object> map){
+    @PostMapping("/createRecords")
+    public JsonResponse createRecords(@RequestBody Map<String, Object> map){
         //commodityDTO里包含barcode,name,id,price,nowPrice,num,sum的信息
         // 从Map中提取data数组
         List<?> dataList = (List<?>) map.get("data");
@@ -102,7 +102,7 @@ public class RecordController {
         record.setId(id);
         record.setMethod(Integer.parseInt(map.get("method").toString()));
         record.setWorkerId(Integer.parseInt(map.get("workerId").toString()));
-        if(StringUtils.isNotBlank(map.get("memId").toString())){
+        if(map.get("memId")!=null && StringUtils.isNotBlank(map.get("memId").toString())){
             record.setMemId(Integer.parseInt(map.get("memId").toString()));
         }
         record.setType(Integer.parseInt(map.get("type").toString()));
@@ -133,7 +133,7 @@ public class RecordController {
             r.setNumber(commodityDTO.getNum());
             records.add(r);
         }
-        return JsonResponse.success(recordService.sellCommodities(records));
+        return JsonResponse.success(recordService.createRecords(records));
     }
 
     /**
@@ -149,6 +149,12 @@ public class RecordController {
         Page<Record> page = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
         return JsonResponse.success(recordService.getRecords(page, record));
     }
+
+    /**
+     * 查询销售单据详情信息
+     * @param record 必须包含id,type，根据这两个字段查询
+     * @return 没有订单号data返回null，否则data返回查询到的数据
+     */
     @ResponseBody
     @GetMapping("/getRecordWithCommodity")
     public JsonResponse getRecordWihCommodity(Record record){
@@ -158,5 +164,21 @@ public class RecordController {
             return JsonResponse.success(recordService.getRecordWithCommodity(record));
         }
     }
+
+    /**
+     * 根据店铺id获取所有的挂单
+     * @param supId 店铺id
+     * @return 查询到的Record列表或null
+     */
+    @ResponseBody
+    @GetMapping("/getPendedRecords/{id}")
+    public JsonResponse getPendedRecords(@PathVariable("id") Integer supId){
+        if(supId != null){
+            return JsonResponse.success(recordService.getPendedRecords(supId));
+        }else{
+            return JsonResponse.success(null);
+        }
+    }
+
 }
 

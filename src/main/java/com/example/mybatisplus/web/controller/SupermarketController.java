@@ -30,12 +30,13 @@ public class SupermarketController {
     private SupermarketService supermarketService;
 
     /**
-    * 描述：根据Id 查询
-    *
-    */
+     * 根据id获取店铺信息
+     * @param id 店铺id
+     * @return Supermarket
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getById(@PathVariable("id") Long id)throws Exception {
+    public JsonResponse getById(@PathVariable("id") Integer id){
         Supermarket  supermarket =  supermarketService.getById(id);
         return JsonResponse.success(supermarket);
     }

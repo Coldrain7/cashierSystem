@@ -3,6 +3,7 @@ package com.example.mybatisplus.mapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.mybatisplus.model.dto.CommodityDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface RecordMapper extends BaseMapper<Record> {
     List<Record> selectRecordWithCommodity(@Param("record")Record record);
 
     List<Record> selectPendedRecords(@Param("supId") Integer supId);
+
+    List<CommodityDTO> selectCommodityDTOByRecord(@Param("record") Record record);
 }

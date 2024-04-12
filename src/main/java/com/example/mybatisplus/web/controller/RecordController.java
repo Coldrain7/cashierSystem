@@ -51,14 +51,14 @@ public class RecordController {
     }
 
     /**
-    * 描述：根据Id删除
-    *
-    */
+     * 根据id删除
+     * @param id record的id
+     * @return 删除成功返回true,否则返回false
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        recordService.removeById(id);
-        return JsonResponse.success(null);
+    public JsonResponse deleteById(@PathVariable("id") Long id){
+        return JsonResponse.success(recordService.removeById(id));
     }
 
 
@@ -177,6 +177,21 @@ public class RecordController {
             return JsonResponse.success(recordService.getPendedRecords(supId));
         }else{
             return JsonResponse.success(null);
+        }
+    }
+
+    /**
+     * 根据挂单获取商品信息
+     * @param record 需要包含id信息，不对type进行检验
+     * @return 返回CommodityDTO的列表或null
+     */
+    @ResponseBody
+    @GetMapping("/getPendedCommodities")
+    public JsonResponse getPendedCommodities(Record record){
+        if(record.getId() == null){
+            return JsonResponse.success(null);
+        }else{
+            return JsonResponse.success(recordService.getPendedCommodities(record));
         }
     }
 

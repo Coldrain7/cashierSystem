@@ -48,6 +48,14 @@
         <result column="update_time" property="updateTime" />
         <result column="is_deleted" property="isDeleted" />
     </resultMap>
+    <resultMap id="CommodityDTOMap" type="com.example.mybatisplus.model.dto.CommodityDTO">
+        <id column="id" property="id" />
+        <result column="number" property="num" />
+        <result column="payment" property="sum" />
+        <result column="barcode" property="barcode" />
+        <result column="price" property="price" />
+        <result column="name" property="name"/>
+    </resultMap>
     <resultMap id="RecordWithMember" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
         <association property="member"  javaType="com.example.mybatisplus.model.domain.Member" resultMap="MemberMap"></association>
     </resultMap>
@@ -85,6 +93,12 @@
         from record left outer join  worker on record.worker_id = worker.id and worker.is_deleted = 0
         group by record.id
         having type = 2 and is_deleted = 0 and sup_id = #{supId}
+    </select>
+    <select id="selectCommodityDTOByRecord" resultMap="CommodityDTOMap">
+        select record.payment, record.number,
+               commodity.id, commodity.price,commodity.barcode, commodity.name
+        from record left outer join commodity on record.com_id = commodity.id and commodity.is_deleted = 0
+        where record.type = 2 and record.id = #{record.id}
     </select>
 
 </mapper>

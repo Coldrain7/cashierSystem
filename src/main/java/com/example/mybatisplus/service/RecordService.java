@@ -5,6 +5,7 @@ import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.mybatisplus.model.dto.CommodityDTO;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface RecordService extends IService<Record> {
     List<Record> getRecordWithCommodity(Record record);
 
     List<Record> getPendedRecords(Integer supId);
+
+    List<CommodityDTO> getPendedCommodities(Record record);
 }

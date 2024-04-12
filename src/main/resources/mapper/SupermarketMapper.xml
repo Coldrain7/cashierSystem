@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Supermarket">
         <id column="id" property="id" />
         <result column="name" property="name" />
+        <result column="point_ratio" property="pointRatio" />
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

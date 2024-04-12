@@ -32,6 +32,8 @@ public class Supermarket extends Model<Supermarket> {
     private Integer id;
 
     private String name;
+    //积分规则，数值代表1元对应的积分数
+    private Double pointRatio;
 
     @TableLogic
     private Boolean isDeleted;

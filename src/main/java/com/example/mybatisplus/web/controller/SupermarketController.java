@@ -54,14 +54,14 @@ public class SupermarketController {
 
 
     /**
-    * 描述：根据Id 更新
-    *
-    */
-    @RequestMapping(value = "", method = RequestMethod.PUT)
+     * 根据id更新店铺信息
+     * @param supermarket 需要包含Supermarket所有属性信息
+     * @return json data returns true if success, else false
+     */
+    @PostMapping("/updateSupermarket")
     @ResponseBody
-    public JsonResponse updateSupermarket(Supermarket  supermarket) throws Exception {
-        supermarketService.updateById(supermarket);
-        return JsonResponse.success(null);
+    public JsonResponse updateSupermarket(@RequestBody Supermarket  supermarket){
+        return JsonResponse.success(supermarketService.updateById(supermarket));
     }
 
     /**

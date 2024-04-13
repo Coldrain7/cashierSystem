@@ -1,5 +1,6 @@
 package com.example.mybatisplus.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.mybatisplus.common.utls.SessionUtils;
 import com.example.mybatisplus.model.dto.MailDTO;
 import com.example.mybatisplus.service.MailService;
@@ -49,26 +50,41 @@ public class WorkerController {
     }
 
     /**
-    * 描述：根据Id删除
-    *
-    */
+     * 根据id删除员工
+     * @param id 员工id
+     * @return json data returns true if success, else false
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public JsonResponse deleteById(@PathVariable("id") Long id) throws Exception {
-        workerService.removeById(id);
-        return JsonResponse.success(null);
+    public JsonResponse deleteById(@PathVariable("id") Integer id){
+        return JsonResponse.success(workerService.removeById(id));
     }
 
 
     /**
-    * 描述：根据Id 更新
-    *
-    */
+     * 根据id跟新Worker
+     * @param worker 必须包含所有基本信息
+     * @return json data returns true if success, else false
+     */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
-    public JsonResponse updateWorker(Worker  worker) throws Exception {
-        workerService.updateById(worker);
-        return JsonResponse.success(null);
+    public JsonResponse updateWorker(Worker  worker){
+        return JsonResponse.success(workerService.updateById(worker));
+    }
+
+    /**
+     * 根据id更新员工姓名
+     * @param worker 必须包含id信息
+     * @return json data returns true if success, else falseer
+     */
+    @ResponseBody
+    @PostMapping("/updateWorkerById")
+    public JsonResponse updateWorkerById(@RequestBody Worker worker){
+        if(worker.getId() == null){
+            return JsonResponse.success(null);
+        }else{
+            return JsonResponse.success(workerService.updateWorkerById(worker));
+        }
     }
 
     /**
@@ -103,14 +119,10 @@ public class WorkerController {
     @ResponseBody
     @PostMapping ("/registerMessage")
     public JsonResponse registerMessage(@RequestBody Worker worker) {
-        System.out.println(worker.getName());
-        System.out.println(worker.getType());
-        System.out.println(worker.getSupId());
-        System.out.println(worker.getId());
         String message =
                 "欢迎登录收银管理系统！\n" +
                 "您的店铺账号为" + worker.getSupId() + "\n" +
-                "您的店铺管理员登录账号为" + worker.getId();
+                "您的店铺登录账号为" + worker.getId();
         String[] to = new String[1];
         to[0] = worker.getMail();
         MailDTO mailDTO = new MailDTO();
@@ -193,6 +205,55 @@ public class WorkerController {
     public JsonResponse getSupIdById(Worker worker){
         Worker w = workerService.getById(worker.getId());
         return JsonResponse.success(w.getSupId());
+    }
+
+    /**
+     * 根据店铺id获取所有员工
+     * @param supId 店铺id
+     * @return Worker列表
+     */
+    @ResponseBody
+    @GetMapping("/getSupWorkers/{id}")
+    public JsonResponse getSupWorkers(@PathVariable("id") Integer supId){
+        if (supId == null) {
+            return JsonResponse.success(null);
+        }else{
+            return JsonResponse.success(workerService.getSupWorkers(supId));
+        }
+    }
+
+    /**
+     * 根据姓名查询员工
+     * @param worker 必须包含supId与name
+     * @return 返回Worker列表
+     */
+    @ResponseBody
+    @GetMapping("/getWorkersByName")
+    public JsonResponse getWorkersByName(Worker worker){
+        if(worker.getSupId() == null || worker.getName() == null){
+            return JsonResponse.success(null);
+        }else{
+            return JsonResponse.success(workerService.getWorkersByName(worker));
+        }
+    }
+
+    /**
+     * 创建员工
+     * @param worker 必须包含supId, password, type信息
+     * @return 创建成功返回员工id,否则返回错误信息
+     */
+    @ResponseBody
+    @PostMapping("/createWorker")
+    public JsonResponse createWorker(@RequestBody Worker worker){
+        if(worker.getSupId() == null){
+            return JsonResponse.failure("创建失败：没有店铺id信息");
+        }else if(worker.getPassword() == null){
+            return JsonResponse.failure("创建失败：没有密码信息");
+        }else if(worker.getType() == null){
+            return JsonResponse.failure("创建失败：没有员工类型信息");
+        }else {
+            return JsonResponse.success(workerService.insert(worker));
+        }
     }
 
 }

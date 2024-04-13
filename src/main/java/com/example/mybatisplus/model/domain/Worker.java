@@ -39,7 +39,7 @@ public class Worker extends Model<Worker> {
 
     private String password;
 
-    //0表示管理员 1表示收银员
+    //1表示店主， 2表示收银员,3表示管理员
     private Integer type;
 
     @TableLogic

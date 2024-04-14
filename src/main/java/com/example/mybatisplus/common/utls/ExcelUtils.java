@@ -50,7 +50,7 @@ public class ExcelUtils {
                     if (row == null) {
                         continue;
                     }
-                    //后的当前行的开始列
+                    //获得当前行的开始列
                     int firstCellNum = row.getFirstCellNum();
                     //获得当前行的列数
                     int lastCellNum = row.getPhysicalNumberOfCells();

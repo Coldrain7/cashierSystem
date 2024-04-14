@@ -429,7 +429,7 @@ public class CommodityController {
         QueryWrapper<Commodity>  wrapper = new QueryWrapper<>();
         wrapper.eq("parent", commodity.getId()).eq("sup_id", commodity.getSupId());
         Commodity c = commodityService.getOne(wrapper);
-        boolean res = c == null? false:true;
+        boolean res = c != null;
         return JsonResponse.success(res, "商品已加入组合拆分中");
     }
 
@@ -452,6 +452,40 @@ public class CommodityController {
         Page<Commodity>page = new Page<>(map.get("pageNo"), map.get("pageSize"));
         page = commodityService.searchWarning(page, supId, claId, supplierId, funcId, num);
         return JsonResponse.success(page);
+    }
+
+    /**
+     * 根据分类id查询商品
+     * @param claIds 分类id
+     * @param type 是否包含子分类，true 包含，false 不包含
+     * @return 查询到的商品列表
+     */
+    @ResponseBody
+    @PostMapping("/getCommoditiesByClaIds/{type}")
+    public JsonResponse getCommoditiesByClaIds(@RequestBody List<Integer> claIds, @PathVariable("type") Integer type){
+        return JsonResponse.success(commodityService.getCommoditiesByClaIds(claIds, type));
+    }
+
+    /**
+     * 对传进来的commodity的isDiscount字段取反
+     * @param commodities 必须包含id与isDiscount信息
+     * @return 操作成功返回true,否则返回false
+     */
+    @ResponseBody
+    @PostMapping("/notIsDiscounts")
+    public JsonResponse notIsDiscounts(@RequestBody List<Commodity> commodities){
+        return JsonResponse.success(commodityService.notIsDiscount(commodities));
+    }
+
+    /**
+     * 获取店铺的不能计入积分的商品
+     * @param supId 店铺id
+     * @return 返回商品列表
+     */
+    @ResponseBody
+    @GetMapping("/getNoDiscountCommodities")
+    public JsonResponse getNoDiscountCommodities(Integer supId){
+        return JsonResponse.success(commodityService.getNoDiscountCommodities(supId));
     }
 }
 

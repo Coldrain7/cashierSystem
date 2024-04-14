@@ -61,4 +61,10 @@ public interface CommodityService extends IService<Commodity> {
     Page<Commodity> searchWarning(Page<Commodity> page,Integer supId, Integer claId, Integer supplierId,Integer funcId, Integer num);
 
     List<Commodity> getCommodities(Commodity commodity);
+
+    List<Commodity> getCommoditiesByClaIds(List<Integer> claIds, Integer includeSonClass);
+
+    boolean notIsDiscount(List<Commodity> commodities);
+
+    List<Commodity> getNoDiscountCommodities(Integer supId);
 }

@@ -1,5 +1,6 @@
 package com.example.mybatisplus.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Combination;
 import com.example.mybatisplus.model.domain.Commodity;
@@ -77,4 +78,10 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     List<Commodity> selectCommodities(@Param("commodity")Commodity commodity);
 
     boolean updateInventory(@Param("record") Record record);
+
+    List<Commodity> selectCommoditiesByClaIds(@Param("claIds") List<Integer> claIds, @Param("includeSonClass") Integer includeSonClass);
+
+    boolean updateIsDiscount(@Param("commodity") Commodity commodity);
+
+    List<Commodity> selectNoDiscountCommodities(Integer supId);
 }

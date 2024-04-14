@@ -91,6 +91,9 @@
         <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
         <association property="supplier"  javaType="com.example.mybatisplus.model.domain.Supplier" resultMap="SupplierMap"></association>
     </resultMap>
+    <resultMap id="CommodityWithClassification" type="com.example.mybatisplus.model.domain.Commodity" extends="BaseResultMap">
+        <association property="classification"  javaType="com.example.mybatisplus.model.domain.Classification" resultMap="ClassificationMap"></association>
+    </resultMap>
     <update id="updateInventory">
         UPDATE commodity
         <choose>
@@ -102,6 +105,11 @@
             </when>
         </choose>
         WHERE id = #{record.comId}
+    </update>
+    <update id="updateIsDiscount">
+            UPDATE commodity
+            SET is_discount = #{commodity.isDiscount}
+            WHERE id = #{commodity.id}
     </update>
     <select id="selectCommodityPage" resultMap="CommodityPage">
         select commodity.id,commodity.name,commodity.barcode,commodity.inventory,commodity.purchase_price,
@@ -194,13 +202,13 @@
         left outer join multibarcode on multibarcode.com_id = commodity.id and multibarcode.is_deleted = 0
         <where>
             commodity.sup_id = #{commodity.supId} and commodity.is_deleted = 0
-            <if test="claIds.size()>0 and claIds != null">
+            <if test="claIds != null and claIds.size()>0">
                 and classification.id in
                 <foreach item="item" index="index" collection="claIds" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-            <if test="supplierIds.size()>0 and supplierIds != null">
+            <if test="supplierIds != null and supplierIds.size()>0 ">
                 and supplier.id in
                 <foreach item="item" index="index" collection="supplierIds" open="(" separator="," close=")">
                     #{item}
@@ -295,12 +303,34 @@
     </select>
     <select id="selectCommodities" resultMap="UniqueBarcode">
         select commodity.barcode, commodity.name, commodity.price, commodity.id,
-               multibarcode.barcode as m_barcode
+               multibarcode.barcode as m_barcode, commodity.is_discount
         from commodity left outer join multibarcode
         on commodity.id = multibarcode.com_id and commodity.is_deleted = 0 and multibarcode.is_deleted = 0
         where (commodity.barcode like '%${commodity.barcode}' or commodity.name like '%${commodity.barcode}%'
                    or multibarcode.barcode = '%${commodity.barcode}')
         and sup_id = #{commodity.supId}
+    </select>
+    <select id="selectCommoditiesByClaIds" resultMap="CommodityWithClassification">
+        select commodity.id, commodity.name, commodity.barcode, commodity.cla_id, commodity.price, commodity.is_discount,
+               classification.classification
+        from commodity left outer join classification on commodity.cla_id = classification.id and classification.is_deleted = 0
+        where commodity.is_deleted = 0
+        and classification.id in
+        <foreach item="item" index="index" collection="claIds" open="(" separator="," close=")">
+                #{item}
+        </foreach>
+        <if test="includeSonClass == 1">
+            or classification.cla_id in
+            <foreach item="item" index="index" collection="claIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectNoDiscountCommodities" resultMap="CommodityWithClassification">
+        select commodity.id, commodity.name, commodity.barcode, commodity.cla_id, commodity.price, commodity.is_discount,
+            classification.classification
+        from commodity left outer join classification on commodity.cla_id = classification.id and classification.is_deleted = 0
+        where commodity.is_deleted = 0 and commodity.is_discount = 0
     </select>
 
 </mapper>

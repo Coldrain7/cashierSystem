@@ -19,6 +19,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.PatternDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -246,6 +247,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
                 }else{
                     changedSet.add(i);
                 }
+                commodity.setClaId(claMap.get(stringList.get(i)[2]));
                 commodity.setSupplierId(supplierMap.get(stringList.get(i)[10]));
                 pattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
                 if (pattern.matcher(stringList.get(i)[11]).matches()) {
@@ -325,5 +327,34 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public List<Commodity> getCommodities(Commodity commodity) {
         return commodityMapper.selectCommodities(commodity);
+    }
+
+    @Override
+    public List<Commodity> getCommoditiesByClaIds(List<Integer> claIds, Integer includeSonClass) {
+        if(claIds.isEmpty()){
+            return null;
+        }else{
+            return commodityMapper.selectCommoditiesByClaIds(claIds, includeSonClass);
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean notIsDiscount(List<Commodity> commodities) {
+        if(commodities.isEmpty())return true;
+        try{
+            for(Commodity c:commodities){
+                c.setIsDiscount(!c.getIsDiscount());
+                commodityMapper.updateIsDiscount(c);
+            }
+            return true;
+        }catch (RuntimeException e){
+            return false;
+        }
+    }
+
+    @Override
+    public List<Commodity> getNoDiscountCommodities(Integer supId) {
+        return commodityMapper.selectNoDiscountCommodities(supId);
     }
 }

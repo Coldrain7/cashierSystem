@@ -6,7 +6,9 @@ import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.recordVO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -31,4 +33,6 @@ public interface RecordService extends IService<Record> {
     List<Record> getPendedRecords(Integer supId);
 
     List<CommodityDTO> getPendedCommodities(Record record);
+
+    List<recordVO> getSale(LocalDate beginDate, LocalDate endDate, Integer mode, Integer supId);
 }

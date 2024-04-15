@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.recordVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,4 +35,7 @@ public interface RecordMapper extends BaseMapper<Record> {
     List<Record> selectPendedRecords(@Param("supId") Integer supId);
 
     List<CommodityDTO> selectCommodityDTOByRecord(@Param("record") Record record);
+
+    List<recordVO> selectSale(@Param("beginDate") LocalDate beginDate, @Param("endDate") LocalDate endDate,
+                              @Param("mode") Integer mode, @Param("supId")Integer supId);
 }

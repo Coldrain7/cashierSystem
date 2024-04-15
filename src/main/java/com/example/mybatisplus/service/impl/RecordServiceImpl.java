@@ -5,12 +5,14 @@ import com.example.mybatisplus.mapper.CommodityMapper;
 import com.example.mybatisplus.model.domain.Record;
 import com.example.mybatisplus.mapper.RecordMapper;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.recordVO;
 import com.example.mybatisplus.service.RecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -69,6 +71,11 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     @Override
     public List<CommodityDTO> getPendedCommodities(Record record) {
         return recordMapper.selectCommodityDTOByRecord(record);
+    }
+
+    @Override
+    public List<recordVO> getSale(LocalDate beginDate, LocalDate endDate, Integer mode, Integer supId) {
+        return recordMapper.selectSale(beginDate, endDate, mode, supId);
     }
 
 

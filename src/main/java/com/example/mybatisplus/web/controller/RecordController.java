@@ -16,6 +16,9 @@ import com.example.mybatisplus.common.JsonResponse;
 import com.example.mybatisplus.service.RecordService;
 import com.example.mybatisplus.model.domain.Record;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -195,5 +198,25 @@ public class RecordController {
         }
     }
 
+    /**
+     * 按年、月、周查询销售数据信息
+     * @param map 必须包含beginDate, endDate与mode信息
+     * @return recordVO列表,按天查询日期放在beginDate中；按月查询会把这个月的最小日期放入beginDate,前端此时需要修改下格式
+     */
+    @ResponseBody
+    @PostMapping("/getSale")
+    public JsonResponse getSale(@RequestBody Map<String, Object> map){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(map.get("beginDate") == null || map.get("beginDate").equals("")||map.get("endDate") == null || map.get("endDate").equals("")){
+            return JsonResponse.failure("没有时间信息");
+        }else{
+            LocalDate beginDate = LocalDate.parse(map.get("beginDate").toString(), df);
+            LocalDate endDate = LocalDate.parse(map.get("endDate").toString(), df);
+            Integer mode = Integer.parseInt(map.get("mode").toString());
+            Integer supId = Integer.parseInt(map.get("supId").toString());
+            return JsonResponse.success(recordService.getSale(beginDate, endDate, mode, supId));
+        }
+
+    }
 }
 

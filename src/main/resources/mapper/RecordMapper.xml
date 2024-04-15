@@ -56,6 +56,16 @@
         <result column="price" property="price" />
         <result column="name" property="name"/>
     </resultMap>
+    <resultMap id="recordVOMap" type="com.example.mybatisplus.model.vo.recordVO">
+        <id column="total_number" property="totalNumber" />
+        <id column="total_payment" property="totalPayment" />
+        <result column="record_num" property="recordNum" />
+        <result column="total_purchase_price" property="totalPurchasePrice" />
+        <result column="begin_date" property="beginDate" />
+        <result column="end_date" property="endDate" />
+        <result column="total_profit" property="totalProfit" />
+        <result column="profit_ratio" property="profitRatio"/>
+    </resultMap>
     <resultMap id="RecordWithMember" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
         <association property="member"  javaType="com.example.mybatisplus.model.domain.Member" resultMap="MemberMap"></association>
     </resultMap>
@@ -99,6 +109,41 @@
                commodity.id, commodity.price,commodity.barcode, commodity.name
         from record left outer join commodity on record.com_id = commodity.id and commodity.is_deleted = 0
         where record.type = 2 and record.id = #{record.id}
+    </select>
+    <select id="selectSale" resultMap="recordVOMap">
+        with mytable as(
+            select
+                <!--按天-->
+                <if test="mode == 0">
+                    DATE(record.create_time)
+                </if>
+                <!--按周-->
+                <if test="mode == 1">
+                    YEARWEEK(record.create_time, 1)
+                </if>
+                <!--按月-->
+                <if test="mode == 2">
+                    DATE_FORMAT(record.create_time, '%Y-%m')
+                </if>
+                AS term,
+                SUM(record.number) AS total_number,
+                SUM(record.payment) AS total_payment,
+                sum(commodity.purchase_price * record.number) as total_purchase_price,
+                COUNT(distinct record.id) AS record_num,
+                <if test="mode == 0 || mode == 2">
+                    min(date(record.create_time)) as begin_date
+                </if>
+                <if test="mode == 1">
+                    min(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) + 1 DAY))) as begin_date,
+                    max(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) - 5 DAY)) ) as end_date
+                </if>
+            from record left outer join commodity on record.com_id = commodity.id
+            where record.is_deleted = 0 and record.worker_id in (select id from worker where sup_id = #{supId})
+            and record.create_time &gt;= #{beginDate} and record.create_time &lt;= #{endDate}
+            group by term
+            ORDER BY term)
+        select *, total_payment - total_purchase_price as total_profit, (total_payment - total_purchase_price)/total_purchase_price as profit_ratio
+        from mytable
     </select>
 
 </mapper>

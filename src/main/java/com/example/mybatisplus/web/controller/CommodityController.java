@@ -200,7 +200,7 @@ public class CommodityController {
                     return JsonResponse.success(commodityService.updateById(commodity), "保存失败");
                 }
             }else{//商品为拆分后的商品，还需要更新组合后的商品进货价
-                QueryWrapper wrapper = new QueryWrapper<>();
+                QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
                 wrapper.eq("id", c.getParent());
                 Commodity combinedCommodity = commodityService.getOne(wrapper);
                 Double num = Double.parseDouble(c.getSpecification().substring(2));

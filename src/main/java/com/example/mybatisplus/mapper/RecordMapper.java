@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.ProportionVO;
 import com.example.mybatisplus.model.vo.recordVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,4 +39,9 @@ public interface RecordMapper extends BaseMapper<Record> {
 
     List<recordVO> selectSale(@Param("beginDate") LocalDate beginDate, @Param("endDate") LocalDate endDate,
                               @Param("mode") Integer mode, @Param("supId")Integer supId);
+
+    List<ProportionVO> selectProportion(@Param("beginDate") LocalDate beginDate, @Param("endDate")LocalDate endDate,
+                                        @Param("includeSubClass") Boolean includeSubClass, @Param("supId")Integer supId);
+
+    Page<Record> selectSupRecords(Page<Record> page, @Param("supId") Integer supId, @Param("record")Record record);
 }

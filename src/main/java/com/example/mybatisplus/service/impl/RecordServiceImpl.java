@@ -5,6 +5,7 @@ import com.example.mybatisplus.mapper.CommodityMapper;
 import com.example.mybatisplus.model.domain.Record;
 import com.example.mybatisplus.mapper.RecordMapper;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.ProportionVO;
 import com.example.mybatisplus.model.vo.recordVO;
 import com.example.mybatisplus.service.RecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -47,7 +48,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             }
             return recordMapper.insertRecords(records);
         }catch (RuntimeException e){
-            //e.printStackTrace();
+            e.printStackTrace();
             System.out.println("sql查询错误");
             return false;
         }
@@ -78,5 +79,14 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         return recordMapper.selectSale(beginDate, endDate, mode, supId);
     }
 
+    @Override
+    public List<ProportionVO> getProportion(LocalDate beginDate, LocalDate endDate, Boolean includeSubClass, Integer supId) {
+        return recordMapper.selectProportion(beginDate, endDate, includeSubClass, supId);
+    }
+
+    @Override
+    public Page<Record> getRecords(Page<Record> page, Integer supId, Record record) {
+        return recordMapper.selectSupRecords(page, supId, record);
+    }
 
 }

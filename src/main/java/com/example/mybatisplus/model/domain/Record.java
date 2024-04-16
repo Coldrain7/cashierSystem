@@ -60,6 +60,8 @@ public class Record extends Model<Record> {
     private Member member;
     @TableField(exist = false)
     private Commodity commodity;
+    @TableField(exist = false)
+    private Worker worker;
     @Override
     protected Serializable pkVal() {
         return this.id;

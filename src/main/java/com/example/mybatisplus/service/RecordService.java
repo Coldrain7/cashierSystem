@@ -6,6 +6,7 @@ import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.model.domain.Record;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.mybatisplus.model.dto.CommodityDTO;
+import com.example.mybatisplus.model.vo.ProportionVO;
 import com.example.mybatisplus.model.vo.recordVO;
 
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public interface RecordService extends IService<Record> {
     boolean createRecords(List<Record> records);
 
     Page<Record> getRecords(Page<Record> page, Record record);
+    Page<Record> getRecords(Page<Record> page, Integer supId, Record record);
 
     List<Record> getRecordWithCommodity(Record record);
 
@@ -35,4 +37,7 @@ public interface RecordService extends IService<Record> {
     List<CommodityDTO> getPendedCommodities(Record record);
 
     List<recordVO> getSale(LocalDate beginDate, LocalDate endDate, Integer mode, Integer supId);
+
+    List<ProportionVO> getProportion(LocalDate beginDate, LocalDate endDate, Boolean includeSubClass, Integer supId);
+
 }

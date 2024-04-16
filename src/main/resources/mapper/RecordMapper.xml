@@ -17,11 +17,22 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
     <resultMap id="MemberMap" type="com.example.mybatisplus.model.domain.Member">
-        <id column="m_id" property="id" />
+        <id column="mem_id" property="id" />
         <result column="name" property="name" />
         <result column="phone" property="phone" />
         <result column="point" property="point" />
         <result column="sup_id" property="supId"/>
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="WorkerMap" type="com.example.mybatisplus.model.domain.Worker">
+        <id column="worker_id" property="id" />
+        <result column="sup_id" property="supId" />
+        <result column="worker_name" property="name" />
+        <result column="mail" property="mail" />
+        <result column="password" property="password" />
+        <result column="type" property="type" />
         <result column="is_deleted" property="isDeleted" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -66,11 +77,21 @@
         <result column="total_profit" property="totalProfit" />
         <result column="profit_ratio" property="profitRatio"/>
     </resultMap>
+    <resultMap id="proportionVOMap" type="com.example.mybatisplus.model.vo.ProportionVO">
+        <id column="total_number" property="totalNumber" />
+        <id column="total_payment" property="totalPayment" />
+        <result column="total_profit" property="totalProfit" />
+        <result column="classification" property="classification"/>
+    </resultMap>
     <resultMap id="RecordWithMember" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
         <association property="member"  javaType="com.example.mybatisplus.model.domain.Member" resultMap="MemberMap"></association>
     </resultMap>
     <resultMap id="RecordWithCommodity" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
         <association property="commodity"  javaType="com.example.mybatisplus.model.domain.Commodity" resultMap="CommodityMap"></association>
+    </resultMap>
+    <resultMap id="RecordWithMemberWorker" type="com.example.mybatisplus.model.domain.Record" extends="BaseResultMap">
+        <association property="member"  javaType="com.example.mybatisplus.model.domain.Member" resultMap="MemberMap"></association>
+        <association property="worker"  javaType="com.example.mybatisplus.model.domain.Worker" resultMap="WorkerMap"></association>
     </resultMap>
     <insert id="insertRecords">
         INSERT INTO record (id, worker_id, mem_id, com_id, number, payment, method, type)
@@ -144,6 +165,57 @@
             ORDER BY term)
         select *, total_payment - total_purchase_price as total_profit, (total_payment - total_purchase_price)/total_purchase_price as profit_ratio
         from mytable
+    </select>
+    <select id="selectProportion" resultMap="proportionVOMap">
+        with mytable as(
+        select
+        commodity.cla_id,
+        SUM(record.number) AS total_number,
+        SUM(record.payment) AS total_payment,
+        sum(commodity.purchase_price * record.number) as total_purchase_price
+        from record left outer join commodity on record.com_id = commodity.id
+        where record.is_deleted = 0 and record.worker_id
+        in (select id from worker where sup_id = #{supId}) and record.create_time &gt;= #{beginDate} and record.create_time &lt;= #{endDate}
+        group by commodity.cla_id)
+        select
+        <if test="includeSubClass == false">
+            mytable.total_number,
+            mytable.total_payment,
+            total_payment - total_purchase_price as total_profit,
+            sub.classification
+        </if>
+        <if test="includeSubClass == true">
+            sum(mytable.total_number) as total_number,
+            sum(mytable.total_payment) as total_payment,
+            sum(total_payment - total_purchase_price) as total_profit,
+            COALESCE(p.classification, sub.classification) AS classification
+        </if>
+        from mytable
+        left outer join classification sub ON mytable.cla_id = sub.id
+        <if test="includeSubClass == true">
+            left outer join classification p ON sub.cla_id = p.id
+            group by classification
+        </if>
+    </select>
+    <select id="selectSupRecords" resultMap="RecordWithMemberWorker">
+        with recordTable as(
+            select id, sum(payment) as payment, min(mem_id) as mem_id, min(type) as type, min(is_deleted) as is_deleted,
+                   min(method) as method, min(create_time) as create_time, min(worker_id) as worker_id
+            from record
+            group by record.id
+            having type = #{record.type} and is_deleted = 0
+        <choose>
+            <when test="record.workerId != null and record.workerId >= 0">
+                and worker_id like '%${record.workerId}')
+            </when>
+            <otherwise>
+                and worker_id in (select id from worker where sup_id = #{supId}) )
+            </otherwise>
+        </choose>
+        select member.name, recordTable.*, worker.name as worker_name
+        from recordTable left outer join member on recordTable.mem_id = member.id and member.is_deleted = 0
+                         join worker on recordTable.worker_id = worker.id
+        order by create_time desc
     </select>
 
 </mapper>

@@ -154,6 +154,20 @@ public class RecordController {
     }
 
     /**
+     * 根据supId获取店铺的所有销售单据
+     * @param pageDTO 分页数据
+     * @param supId 店铺id
+     * @param record 存储type信息，如果还包含workerId信息的话，会对workerId字段进行模糊查询
+     * @return 返回Page封装的Record
+     */
+    @ResponseBody
+    @GetMapping("/getSupRecords/{supId}")
+    public JsonResponse getSupRecords(PageDTO pageDTO, @PathVariable("supId")Integer supId, Record record){
+        if(supId == null)return JsonResponse.success(null);
+        Page<Record> page = new Page<>(pageDTO.getPageNo(), pageDTO.getPageSize());
+        return JsonResponse.success(recordService.getRecords(page, supId, record));
+    }
+    /**
      * 查询销售单据详情信息
      * @param record 必须包含id,type，根据这两个字段查询
      * @return 没有订单号data返回null，否则data返回查询到的数据
@@ -200,7 +214,7 @@ public class RecordController {
 
     /**
      * 按年、月、周查询销售数据信息
-     * @param map 必须包含beginDate, endDate与mode信息
+     * @param map 必须包含beginDate, endDate,mode与supId信息
      * @return recordVO列表,按天查询日期放在beginDate中；按月查询会把这个月的最小日期放入beginDate,前端此时需要修改下格式
      */
     @ResponseBody
@@ -216,7 +230,30 @@ public class RecordController {
             Integer supId = Integer.parseInt(map.get("supId").toString());
             return JsonResponse.success(recordService.getSale(beginDate, endDate, mode, supId));
         }
+    }
 
+    /**
+     * 根据时间查询商品销售占比信息
+     * @param map 必须包含beginDate, endDate,includeSupClass与supId信息
+     * @return ProportionVO列表，需要前端处理
+     */
+    @ResponseBody
+    @PostMapping("/getProportion")
+    public JsonResponse getProportion(@RequestBody Map<String, Object>map){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(map.get("beginDate") == null || map.get("beginDate").equals("")||map.get("endDate") == null || map.get("endDate").equals("")){
+            return JsonResponse.failure("没有时间信息");
+        }else{
+            try{
+                LocalDate beginDate = LocalDate.parse(map.get("beginDate").toString(), df);
+                LocalDate endDate = LocalDate.parse(map.get("endDate").toString(), df);
+                Boolean includeSubClass = Boolean.parseBoolean(map.get("includeSubClass").toString());
+                Integer supId = Integer.parseInt(map.get("supId").toString());
+                return JsonResponse.success(recordService.getProportion(beginDate, endDate, includeSubClass, supId));
+            }catch (RuntimeException e){
+                return JsonResponse.failure("查询失败");
+            }
+        }
     }
 }
 

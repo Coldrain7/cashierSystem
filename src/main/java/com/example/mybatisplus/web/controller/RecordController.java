@@ -255,5 +255,45 @@ public class RecordController {
             }
         }
     }
+
+    /**
+     * 根据数据预测后面的值
+     * @param sellData Double列表
+     * @return 数据长度足够返回预测值的Double列表，否则返回错误信息
+     */
+    @ResponseBody
+    @PostMapping("/predictSelling")
+    public JsonResponse predictSelling(@RequestBody List<Double> sellData){
+        if(sellData.size() < 3){
+            return JsonResponse.failure("数据过少");
+        }else{
+            //默认传给前端3个预测值
+            return JsonResponse.success(recordService.predictSelling(sellData, 3));
+        }
+    }
+
+    /**
+     * 根据商品id按周查询商品销售记录
+     * @param map 包含beginDate, endDate, comId
+     * @return RecordVO列表
+     */
+    @ResponseBody
+    @PostMapping("/getSellingByComId")
+    public JsonResponse getSellingByComId(@RequestBody Map<String, Object>map){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(map.get("beginDate") == null || map.get("beginDate").equals("")||map.get("endDate") == null || map.get("endDate").equals("")){
+            return JsonResponse.failure("没有时间信息");
+        }else{
+            try{
+                LocalDate beginDate = LocalDate.parse(map.get("beginDate").toString(), df);
+                LocalDate endDate = LocalDate.parse(map.get("endDate").toString(), df);
+                Long comId = Long.parseLong(map.get("comId").toString());
+                return JsonResponse.success(recordService.getSellingByComId(beginDate, endDate, comId));
+            }catch (RuntimeException e){
+                e.printStackTrace();
+                return JsonResponse.failure("查询失败");
+            }
+        }
+    }
 }
 

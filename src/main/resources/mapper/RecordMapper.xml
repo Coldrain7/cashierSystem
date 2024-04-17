@@ -67,7 +67,7 @@
         <result column="price" property="price" />
         <result column="name" property="name"/>
     </resultMap>
-    <resultMap id="recordVOMap" type="com.example.mybatisplus.model.vo.recordVO">
+    <resultMap id="recordVOMap" type="com.example.mybatisplus.model.vo.RecordVO">
         <id column="total_number" property="totalNumber" />
         <id column="total_payment" property="totalPayment" />
         <result column="record_num" property="recordNum" />
@@ -76,6 +76,7 @@
         <result column="end_date" property="endDate" />
         <result column="total_profit" property="totalProfit" />
         <result column="profit_ratio" property="profitRatio"/>
+        <result column="term" property="week"/>
     </resultMap>
     <resultMap id="proportionVOMap" type="com.example.mybatisplus.model.vo.ProportionVO">
         <id column="total_number" property="totalNumber" />
@@ -155,8 +156,8 @@
                     min(date(record.create_time)) as begin_date
                 </if>
                 <if test="mode == 1">
-                    min(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) + 1 DAY))) as begin_date,
-                    max(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) - 5 DAY)) ) as end_date
+                    min(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) DAY))) as begin_date,
+                    max(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) - 6 DAY)) ) as end_date
                 </if>
             from record left outer join commodity on record.com_id = commodity.id
             where record.is_deleted = 0 and record.worker_id in (select id from worker where sup_id = #{supId})
@@ -216,6 +217,25 @@
         from recordTable left outer join member on recordTable.mem_id = member.id and member.is_deleted = 0
                          join worker on recordTable.worker_id = worker.id
         order by create_time desc
+    </select>
+    <select id="selectSellingByComId" resultMap="recordVOMap">
+        with mytable as(
+        select
+        YEARWEEK(record.create_time, 1)
+        AS term,
+        record.com_id,
+        SUM(record.number) AS total_number,
+        SUM(record.payment) AS total_payment,
+        sum(commodity.purchase_price * record.number) as total_purchase_price,
+        COUNT(distinct record.id) AS record_num,
+        min(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) DAY))) as begin_date,
+        max(date(date_sub(record.create_time,INTERVAL WEEKDAY(record.create_time) - 6 DAY)) ) as end_date
+        from record left outer join commodity on record.com_id = commodity.id
+        where record.com_id = #{comId} and record.create_time &gt;= #{beginDate} and record.create_time &lt;= #{endDate} and record.is_deleted = 0
+        group by term
+        ORDER BY term)
+        select mytable.*, total_payment - total_purchase_price as total_profit, (total_payment - total_purchase_price)/total_purchase_price as profit_ratio, commodity.name
+        from mytable join commodity on commodity.id = mytable.com_id
     </select>
 
 </mapper>

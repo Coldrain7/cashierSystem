@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisplus.mapper.EventMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mybatisplus.model.domain.Event">
+        <id column="id" property="id" />
+        <id column="com_id" property="comId" />
+        <result column="name" property="name" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="price" property="price" />
+        <result column="is_done" property="isDone" />
+        <result column="amount" property="amount" />
+        <result column="event_price" property="eventPrice" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+    <select id="selectActiveEvents" resultType="com.example.mybatisplus.model.domain.Event">
+        select * from event
+        where curdate() &gt;= begin_time and curdate() &lt;= end_time and is_deleted = 0
+    </select>
+    <select id="selectEndEvent" resultType="com.example.mybatisplus.model.domain.Event">
+        select * from event
+        where curdate() &gt; end_time and is_deleted = 0
+    </select>
+    <select id="selectEventBySupId" resultType="com.example.mybatisplus.model.domain.Event">
+        select event.id, min(event.name) as name, min(begin_time) as begin_time, min(end_time) as end_time,
+               count(distinct com_id) as amount, min(event.create_time) as create_time
+        from event join commodity on event.com_id = commodity.id and commodity.id in(
+        select commodity.id from commodity where sup_id = #{supId})
+        group by id
+        order by create_time
+    </select>
+
+</mapper>

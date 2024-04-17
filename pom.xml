@@ -82,7 +82,16 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>5.2.1.RELEASE</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>4.5.4</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

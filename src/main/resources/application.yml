@@ -26,3 +26,6 @@ logging:
   level:
     com.example.mybatisplus.mapper: debug
 file-upload-path: ./file
+# 训练数据文件夹的路径
+tess4j:
+  datapath: D:/tessdata

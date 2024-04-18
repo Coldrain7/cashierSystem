@@ -82,7 +82,7 @@ public class CommodityController {
     }
 
     /**
-     * 根据关键字查询商品,会联合多码表
+     * 根据关键字查询商品,会联合多码表,会选出id
      * @param commodity 前端需要将关键字存储在barcode字段，supId不能为空
      * @return 有数据就返回List<Commodity>，否则返回null
      */

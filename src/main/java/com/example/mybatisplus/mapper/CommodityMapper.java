@@ -84,4 +84,6 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     boolean updateIsDiscount(@Param("commodity") Commodity commodity);
 
     List<Commodity> selectNoDiscountCommodities(Integer supId);
+
+    void decreaseInventoryById(@Param("decreaseNum") int decreaseNum, @Param("parent") Long parent);
 }

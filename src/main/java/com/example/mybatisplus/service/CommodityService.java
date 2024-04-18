@@ -67,4 +67,5 @@ public interface CommodityService extends IService<Commodity> {
     boolean notIsDiscount(List<Commodity> commodities);
 
     List<Commodity> getNoDiscountCommodities(Integer supId);
+    void updateCombinationInventory();
 }

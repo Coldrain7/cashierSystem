@@ -111,6 +111,11 @@
             SET is_discount = #{commodity.isDiscount}
             WHERE id = #{commodity.id}
     </update>
+    <update id="decreaseInventoryById">
+        update commodity
+        set inventory = (inventory - #{decreaseNum})
+        where id = #{parent}
+    </update>
     <select id="selectCommodityPage" resultMap="CommodityPage">
         select commodity.id,commodity.name,commodity.barcode,commodity.inventory,commodity.purchase_price,
                commodity.price,commodity.specification,commodity.is_discount,commodity.wholesale_price,

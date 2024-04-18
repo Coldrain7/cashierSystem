@@ -357,4 +357,18 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     public List<Commodity> getNoDiscountCommodities(Integer supId) {
         return commodityMapper.selectNoDiscountCommodities(supId);
     }
+    @Transactional
+    public void updateCombinationInventory(){
+        QueryWrapper<Commodity> wrapper = new QueryWrapper<>();
+        wrapper.isNotNull("parent").lt("inventory", 0);
+        List<Commodity> commodities = commodityMapper.selectList(wrapper);//查询到所有库存为负的子类商品
+        for(Commodity commodity:commodities){
+            String specification = commodity.getSpecification();
+            double num = Double.parseDouble(specification.substring(2));
+            int decreaseNum = (int) Math.ceil(commodity.getInventory() / num) + 1;//父类商品减少的库存
+            commodityMapper.decreaseInventoryById(decreaseNum, commodity.getParent());
+            commodity.setInventory(commodity.getInventory() + decreaseNum * num);
+            commodityMapper.updateById(commodity);
+        }
+    }
 }

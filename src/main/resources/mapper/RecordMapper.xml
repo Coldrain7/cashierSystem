@@ -149,8 +149,18 @@
                 </if>
                 AS term,
                 SUM(record.number) AS total_number,
-                SUM(record.payment) AS total_payment,
-                sum(commodity.purchase_price * record.number) as total_purchase_price,
+                SUM(
+                CASE
+                WHEN record.type = 0 THEN record.payment -- 如果type为0，则加
+                WHEN record.type = 1 THEN -record.payment -- 如果type为1，则减（通过取负实现）
+                END
+                ) AS total_payment,
+                SUM(
+                CASE
+                WHEN record.type = 0 THEN commodity.purchase_price * record.number -- 如果type为0，则加
+                WHEN record.type = 1 THEN -commodity.purchase_price * record.number -- 如果type为1，则减（通过取负实现）
+                END
+                ) AS total_purchase_price,
                 COUNT(distinct record.id) AS record_num,
                 <if test="mode == 0 || mode == 2">
                     min(date(record.create_time)) as begin_date

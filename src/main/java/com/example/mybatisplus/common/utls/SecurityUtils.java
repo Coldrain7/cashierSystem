@@ -31,17 +31,17 @@ public class SecurityUtils {
         Worker userInfo = SessionUtils.getCurrentWorkerInfo();
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         //模拟登录
-        if (userInfo == null) {
-            userInfo = new Worker();
-            userInfo.setName("模拟用户");
-            userInfoDTO.setId(1);
-            userInfoDTO.setName("模拟用户");
-            userInfoDTO.setUserType(1);
-        }else{
+//        if (userInfo == null) {
+//            userInfo = new Worker();
+//            userInfo.setName("模拟用户");
+//            userInfoDTO.setId(1);
+//            userInfoDTO.setName("模拟用户");
+//            userInfoDTO.setUserType(1);
+//        }else{
             userInfoDTO.setId(userInfo.getId());
             userInfoDTO.setName(userInfo.getName());
             userInfoDTO.setUserType(userInfo.getType());
-        }
+//        }
         return userInfoDTO;
     }
 }

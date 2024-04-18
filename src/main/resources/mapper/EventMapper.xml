@@ -17,6 +17,19 @@
         <result column="update_time" property="updateTime" />
         <result column="is_deleted" property="isDeleted" />
     </resultMap>
+    <insert id="insertEvents">
+        INSERT INTO event (id, name, begin_time, end_time, price, event_price, com_id)
+        VALUES
+        <foreach collection="events" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.beginTime}, #{item.endTime}, #{item.price},
+            #{item.eventPrice}, #{item.comId})
+        </foreach>
+    </insert>
+    <delete id="deleteEventById">
+        UPDATE event
+        SET is_deleted = 1
+        WHERE id = #{id}
+    </delete>
     <select id="selectActiveEvents" resultType="com.example.mybatisplus.model.domain.Event">
         select * from event
         where curdate() &gt;= begin_time and curdate() &lt;= end_time and is_deleted = 0
@@ -25,13 +38,24 @@
         select * from event
         where curdate() &gt; end_time and is_deleted = 0
     </select>
-    <select id="selectEventBySupId" resultType="com.example.mybatisplus.model.domain.Event">
+    <select id="selectEvent" resultType="com.example.mybatisplus.model.domain.Event">
         select event.id, min(event.name) as name, min(begin_time) as begin_time, min(end_time) as end_time,
-               count(distinct com_id) as amount, min(event.create_time) as create_time
+               count(distinct com_id) as amount, min(event.create_time) as create_time, min(event.is_done) as is_done
         from event join commodity on event.com_id = commodity.id and commodity.id in(
-        select commodity.id from commodity where sup_id = #{supId})
+        select commodity.id from commodity where sup_id = #{supId}) and event.is_deleted = 0
         group by id
         order by create_time
+    </select>
+    <select id="selectEventCommodities" resultType="com.example.mybatisplus.model.domain.Event">
+        select commodity.name, event.price, event.event_price, commodity.id as com_id
+        from event join commodity on event.com_id = commodity.id
+        where event.is_deleted = 0 and event.id = #{id}
+    </select>
+    <select id="selectOneEvent" resultType="com.example.mybatisplus.model.domain.Event">
+        SELECT event.id, min(event.name) as name, min(begin_time) as begin_time, min(end_time) as end_time,
+               count(distinct com_id) as amount, min(event.create_time) as create_time, min(event.is_done) as is_done
+        FROM event WHERE id=#{id}  AND is_deleted=0
+        group by id
     </select>
 
 </mapper>

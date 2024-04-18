@@ -1,9 +1,11 @@
 package com.example.mybatisplus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mybatisplus.model.domain.Commodity;
 import com.example.mybatisplus.model.domain.Event;
 import com.example.mybatisplus.mapper.EventMapper;
+import com.example.mybatisplus.model.domain.Record;
 import com.example.mybatisplus.service.CommodityService;
 import com.example.mybatisplus.service.EventService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -57,8 +60,35 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     }
 
     @Override
-    public List<Event> getAllEvents(Integer supId) {
-        return eventMapper.selectEventBySupId(supId);
+    public Page<Event> getEvents(Page<Event> page, String name,  Integer supId) {
+        return eventMapper.selectEvent(page, name,  supId);
+    }
+
+    @Override
+    @Transactional
+    public boolean addEvents(List<Event> events) {
+        try {
+            return eventMapper.insertEvents(events);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            System.out.println("sql插入event错误");
+            return false;
+        }
+    }
+
+    @Override
+    public List<Event> getEventCommodities(Long id) {
+        return eventMapper.selectEventCommodities(id);
+    }
+
+    @Override
+    public Event getOneById(Long id) {
+        return eventMapper.selectOneEvent(id);
+    }
+
+    @Override
+    public boolean deleteEventById(Long id) {
+        return eventMapper.deleteEventById(id);
     }
 
 }

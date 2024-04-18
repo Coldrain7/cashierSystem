@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,8 +34,9 @@ public class Event extends Model<Event> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long id;
 
     private String name;
 
@@ -49,7 +52,7 @@ public class Event extends Model<Event> {
 
     private Boolean isDone;
 
-    private Double amount;
+    private Double amount;//用于存储前端需要显示的每个活动的商品数量
 
     private LocalDateTime createTime;
 
